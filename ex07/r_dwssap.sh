@@ -12,4 +12,4 @@
 # sed 's/, $/ ./' : 라인 끝에서 ', ' -> ' .' 치환
 # tr -d '\n' : new line 삭제
 
-cat /etc/passwd | grep -v "#" | sed "s/:.*//g" | awk "NR % 2 == 0" | rev | sort -r | sed -n "$FT_LINE1,$FT_LINE2"p | tr '\n' ' ' | sed 's/ /, /g' | sed 's/, $/ ./' | tr -d '\n'
+cat /etc/passwd | grep -v "#" | sed "s/:.*//g" | awk "NR % 2 == 0" | rev | sort -r | sed -n ''$FT_LINE1','$FT_LINE2'p' | tr '\n' ' ' | sed 's/ /, /g' | sed 's/, $/./' | tr -d '\n'
