@@ -1,2 +1,2 @@
 #!/bin/sh
-id -Gn $FT_USER | sed 's/ /,/g' | sed 's/^M//g'
+id -Gn $FT_USER | sed 's/ /,/g' | sed 's/^M//g' | tr -d '\n'
