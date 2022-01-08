@@ -1,3 +1,3 @@
 #!/bin/sh
 
-find * -name "*.sh" | sed "s/\.sh//g"
+find * -type f -name "*.sh" | sed 's/\.sh$//'
