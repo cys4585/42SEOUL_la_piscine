@@ -6,7 +6,7 @@
 /*   By: wonychoi <wonychoi@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 16:10:49 by wonychoi          #+#    #+#             */
-/*   Updated: 2022/01/09 16:18:26 by wonychoi         ###   ########.fr       */
+/*   Updated: 2022/01/09 16:38:18 by wonychoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ void	rush(int x, int y)
 		return ;
 	while (++row < y)
 		print_line(x, 'B', ' ', 'B');
-	print_line(x, 'A', 'B', 'A');
+	print_line(x, 'C', 'B', 'C');
 }
