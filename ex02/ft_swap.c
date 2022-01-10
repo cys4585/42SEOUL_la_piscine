@@ -6,11 +6,9 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/10 12:14:05 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/10 13:32:05 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/10 13:33:31 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdio.h>
 
 void	ft_swap(int *a, int *b)
 {
