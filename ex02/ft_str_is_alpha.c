@@ -6,11 +6,9 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 13:47:11 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/11 14:28:44 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/11 14:32:49 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <stdio.h>
 
 int	ft_str_is_alpha(char *str)
 {
