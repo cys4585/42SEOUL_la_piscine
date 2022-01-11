@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 13:47:11 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/11 14:47:59 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/11 17:21:36 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ int	ft_str_is_alpha(char *str)
 		return (1);
 	while (str[i] != '\0')
 	{
-		if (('a' <= str[i] && str[i] <= 'z') || ('A' <= str[i] && str[i] <= 'Z'))
-			return (1);
+		if (!(('a' <= str[i] && str[i] <= 'z')
+				|| ('A' <= str[i] && str[i] <= 'Z')))
+			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }
