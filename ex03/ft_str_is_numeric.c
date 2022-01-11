@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 14:33:16 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/11 14:42:05 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/11 15:04:20 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@ int	ft_str_is_numeric(char *str)
 	int	i;
 
 	i = 0;
-	if (str[0] == '\0')
-		return (1);
 	while (str[i] != '\0')
 	{
 		if ('9' < str[i] || str[i] < '0')
