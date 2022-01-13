@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 15:39:21 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/12 09:40:21 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/13 10:16:35 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_str_is_printable(char *str)
 		return (1);
 	while (str[i] != '\0')
 	{
-		if ((0 <= str[i] && str[i] <= 31))
+		if (str[i] <= 31)
 			return (0);
 		i++;
 	}
