@@ -6,10 +6,10 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/11 17:02:37 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/12 21:01:43 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/13 10:09:13 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <stdio.h>
+
 unsigned int	ft_strlcpy(char *dest, char *src, unsigned int size)
 {
 	unsigned int	i;
