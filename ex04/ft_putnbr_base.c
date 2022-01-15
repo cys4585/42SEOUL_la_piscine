@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/13 17:22:03 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/13 21:41:32 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/15 21:35:27 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_putchar(char c)
 int	is_invalid(char *base)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = 0;
 	j = 0;
