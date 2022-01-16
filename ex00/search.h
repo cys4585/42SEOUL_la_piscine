@@ -25,9 +25,9 @@ struct s_search
 };
 
 int	try_doing_search(int n, char *cases, char *table, char *cond);
-int	search_table(struct s_search *param, int k);
+int	search_table(struct s_search *param, int x);
+int	try_doing_case(struct s_search *param, char *case_array, int x);
 int	check_table(struct s_search *param);
-int	check_table_way(struct s_search *param, int way, int i);
-int	count_visible(struct s_search *param, int way, int i);
+int	check_way(struct s_search *param, int way, int i);
 
 #endif

@@ -27,6 +27,8 @@ struct s_point
 
 void	initialize_position(int way, struct s_point *pos, int n, int i);
 void	next_step(int way, struct s_point *pos);
-int		validate_table(char *table, char *cond, int n);
+int		count_visible(char *table, int n, int way, int i);
+void	set_vertical(char *table, int n, int x, char *case_array);
+int		check_horizontal(char *table, int n, int x);
 
 #endif

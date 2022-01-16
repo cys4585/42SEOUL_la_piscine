@@ -47,3 +47,64 @@ void	next_step(int way, struct s_point *pos)
 	else if (way == WAY_RIGHT)
 		pos->x--;
 }
+
+int	count_visible(char *table, int n, int way, int i)
+{
+	int				j;
+	struct s_point	pos;
+	int				latest_max;
+	int				visible_count;
+	int				value;
+
+	j = 0;
+	latest_max = 0;
+	visible_count = 0;
+	initialize_position(way, &pos, n, i);
+	while (j < n)
+	{
+		value = table[pos.x + n * pos.y];
+		if (latest_max < value)
+		{
+			latest_max = value;
+			visible_count++;
+		}
+		next_step(way, &pos);
+		j++;
+	}
+	return (visible_count);
+}
+
+void	set_vertical(char *table, int n, int x, char *case_array)
+{
+	int	y;
+
+	y = 0;
+	while (y < n)
+	{
+		if (case_array)
+			table[x + n * y] = case_array[y];
+		else
+			table[x + n * y] = 0;
+		y++;
+	}
+}
+
+int	check_horizontal(char *table, int n, int x0)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < n)
+	{
+		x = 0;
+		while (x < x0)
+		{
+			if (table[x + n * y] == table[x0 + n * y])
+				return (0);
+			x++;
+		}
+		y++;
+	}
+	return (1);
+}
