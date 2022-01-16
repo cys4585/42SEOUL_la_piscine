@@ -28,8 +28,6 @@ int	try_doing_search(int n, char *cases, char *table, char *cond)
 
 int	search_table(struct s_search *param, int x)
 {
-	int		i;
-	int		way;
 	char	*cases;
 
 	if (x == param->n)
