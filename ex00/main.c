@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 14:51:03 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/16 20:03:10 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/16 21:46:48 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	main(int argc, char **argv)
 	{
 		print_error("Error");
 		free(cond);
-		return (1);
+		return (0);
 	}
 	make_cases(n, &ptr);
 	new_table(n, &tab);
