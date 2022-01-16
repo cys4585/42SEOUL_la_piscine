@@ -27,5 +27,6 @@ struct s_point
 
 void	initialize_position(int way, struct s_point *pos, int n, int i);
 void	next_step(int way, struct s_point *pos);
+int		validate_table(char *table, char *cond, int n);
 
 #endif

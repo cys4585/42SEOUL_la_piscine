@@ -14,8 +14,8 @@
 # define BOXES_H
 
 int		read_condition(char **cond_ptr, int argc, char **argv);
+int		calculate_length(char *str);
 void	new_table(int n, char **table_ptr);
 void	print_table(int n, char *table);
-char	single_ascii_to_char(char *str);
 
 #endif

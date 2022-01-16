@@ -20,26 +20,47 @@ int	read_condition(char **cond_ptr, int argc, char **argv)
 {
 	int		i;
 	int		n;
-	char	c;
+	char	*str;
 	char	*cond;
 
-	n = argc - 1;
+	if (argc != 2)
+		return (0);
+	str = argv[1];
+	n = calculate_length(str);
+	if (n == 0)
+		return (0);
+	cond = malloc(4 * n);
+	*cond_ptr = cond;
+	i = 0;
+	while (i < 4 * n)
+	{
+		cond[i] = str[2 * i] - '0';
+		i++;
+	}
+	return (n);
+}
+
+int	calculate_length(char *str)
+{
+	int		n;
+
+	n = 0;
+	while (str[n])
+	{
+		if ((n & 1) && str[n] != ' ')
+			return (0);
+		if (!(n & 1) && (str[n] < '0' || str[n] > '9'))
+			return (0);
+		n++;
+	}
+	if (!(n & 1))
+		return (0);
+	n = (n + 1) / 2;
 	if (n % 4 != 0)
 		return (0);
 	n = n / 4;
 	if (n == 0 || n > 9)
 		return (0);
-	cond = malloc(4 * n);
-	*cond_ptr = cond;
-	i = 1;
-	while (i < argc)
-	{
-		c = single_ascii_to_char(argv[i]);
-		if (c == 0)
-			return (0);
-		cond[i - 1] = c;
-		i++;
-	}
 	return (n);
 }
 
@@ -74,13 +95,4 @@ void	print_table(int n, char *table)
 		write(1, "\n", 1);
 		y++;
 	}
-}
-
-char	single_ascii_to_char(char *str)
-{
-	if (str[0] == '\0' || str[1] != '\0')
-		return (0);
-	if (*str < '0' || *str > '9')
-		return (0);
-	return (*str - '0');
 }
