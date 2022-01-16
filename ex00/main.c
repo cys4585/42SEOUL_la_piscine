@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/16 14:51:03 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/16 14:52:36 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/16 20:03:10 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv)
 	n = read_condition(&cond, argc, argv);
 	if (n == 0)
 	{
-		print_error("Error: cause condition input is illegal");
+		print_error("Error");
 		free(cond);
 		return (1);
 	}
@@ -43,7 +43,7 @@ int	main(int argc, char **argv)
 	if (try_doing_search(n, ptr, tab, cond))
 		print_table(n, tab);
 	else
-		print_error("Error: I'm fkin done");
+		print_error("Error");
 	free(tab);
 	free(ptr);
 	free(cond);

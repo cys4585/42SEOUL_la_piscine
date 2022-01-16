@@ -35,6 +35,8 @@ int	read_condition(char **cond_ptr, int argc, char **argv)
 	while (i < 4 * n)
 	{
 		cond[i] = str[2 * i] - '0';
+		if (cond[i] == 0 || cond[i] > n)
+			return (0);
 		i++;
 	}
 	return (n);
