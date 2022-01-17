@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/15 18:22:07 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/15 21:27:53 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/17 18:58:26 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,13 @@ int	is_invalid(char *base)
 	if (base[0] == '\0' || base[1] == '\0')
 		return (1);
 	while (base[i])
-		if (base[i] == '+' || base[i] == '-' || base[i++] == ' ')
+	{
+		if (base[i] == '+' || base[i] == '-'
+			|| base[i] == ' ' || base[i] == '\n' || base[i] == '\t'
+			|| base[i] == '\v' || base[i] == '\f' || base[i] == '\r')
 			return (1);
+		i++;
+	}
 	i = 0;
 	while (base[i])
 	{
