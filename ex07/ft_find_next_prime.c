@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 11:41:12 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/18 11:56:36 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/19 19:42:49 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@ int	ft_find_next_prime(int nb)
 {
 	int	i;
 
-	if (nb <= 1)
+	if (nb <= 2)
 		return (2);
 	i = 2;
-	while (i <= nb / 2)
+	while (i <= nb / i)
 	{
 		if (nb % i == 0)
 		{
