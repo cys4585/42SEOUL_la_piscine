@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 16:08:28 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/22 21:14:05 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/22 21:24:35 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	validation(char *str)
 {
 	int	i;
 
-	if (str[0] == '0')
+	if (str[0] == '0' && str[1] != '\0')
 		return (0);
 	i = 0;
 	while (str[i])
