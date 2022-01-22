@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/22 15:58:30 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/22 21:07:51 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/22 21:28:41 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 typedef struct	 s_dict
 {
 	int				is_init_entry;
-	char			*key;
+	int				key;
 	char			*value;
 	struct s_dict	*next;
 }	t_dict;
