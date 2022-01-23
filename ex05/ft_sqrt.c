@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 10:33:41 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/19 17:52:06 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/23 20:13:05 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	ft_sqrt(int nb)
 	if (nb == 1)
 		return (1);
 	i = 1;
-	while (i <= nb / 2)
+	while (i <= nb / i)
 	{
-		if ((long)i * i == nb)
+		if ((long long) i * i == nb)
 			return (i);
 		i++;
 	}
