@@ -6,13 +6,11 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 01:37:29 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 18:09:14 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:57:06 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rush.h"
-
-#include <stdlib.h>
 
 int	ft_strlen(char *str)
 {

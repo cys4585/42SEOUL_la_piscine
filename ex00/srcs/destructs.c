@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 02:42:11 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 21:54:46 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:58:15 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 
-void	set_null(void **p1, void **p2)
+void	set_chain_null(t_str_chain **p1, t_str_chain **p2)
 {
 	if (p1)
 		*p1 = NULL;
@@ -41,7 +41,7 @@ void	resolve_destruct(t_resolve *this)
 		free(elem);
 		elem = next;
 	}
-	set_null(&this->head, &this->tail);
+	set_chain_null(&this->head, &this->tail);
 	free(this);
 }
 
@@ -60,7 +60,8 @@ void	dictionary_destruct(t_dictionary *this)
 		free(elem);
 		elem = next;
 	}
-	set_null(&this->head, &this->tail);
+	this->head = NULL;
+	this->tail = NULL;
 	free(this);
 }
 
@@ -79,7 +80,7 @@ void	dict_init_destruct(t_dict_init *this)
 		free(elem);
 		elem = next;
 	}
-	set_null(&this->temp_head, &this->temp_tail);
+	set_chain_null(&this->temp_head, &this->temp_tail);
 	elem = this->final_head;
 	while (elem)
 	{
@@ -88,6 +89,6 @@ void	dict_init_destruct(t_dict_init *this)
 		free(elem);
 		elem = next;
 	}
-	set_null(&this->final_head, &this->final_tail);
+	set_chain_null(&this->final_head, &this->final_tail);
 	free(this);
 }
