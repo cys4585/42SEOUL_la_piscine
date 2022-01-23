@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 04:05:43 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 21:09:21 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:24:06 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	resolve_try_sub(t_resolve *this, t_dictionary	*dict, int n)
 			return (0);
 		n %= 100;
 	}
-	if (n < 20)
+	if (n < TRADITION_MAX)
 	{
 		if (!append(this, dict, n))
 			return (0);

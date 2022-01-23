@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 00:30:48 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 20:52:51 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:25:55 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,10 @@ int	dictionary_apply_init(t_dictionary *this, t_dict_init *init)
 	chain = init->final_head;
 	while (chain)
 	{
-		if (chain->str[0] == '\0')
-			continue ;
-		if (parse_pair(chain->str, &key, &value))
+		if (chain->str[0] != '\0')
 		{
+			if (!parse_pair(chain->str, &key, &value))
+				return (0);
 			old = dictionary_put_value(this, calc_key(key), value);
 			free(key);
 			free(old);

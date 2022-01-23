@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 03:55:27 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 21:13:20 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:32:15 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,48 @@ int	end(int exit_code, t_resolve *res, t_dict_init *init, t_dictionary *dict)
 	return (exit_code);
 }
 
+int	contains_keys(t_dictionary *dict, int key)
+{
+	t_dict_elem		*elem;
+
+	elem = dict->head;
+	while (elem)
+	{
+		if (elem->key == key)
+			return (1);
+		elem = elem->next;
+	}
+	return (0);
+}
+
+int	check_initial_keys(t_dictionary *dict)
+{
+	t_dict_init		*ref_init;
+	t_dictionary	*ref_dict;
+	t_dict_elem		*ref_elem;
+
+	ref_init = NULL;
+	ref_dict = NULL;
+	ref_init = dict_init_construct();
+	if (ref_init == NULL)
+		return (end(1, NULL, ref_init, ref_dict));
+	if (!dict_init_load(ref_init, DEFAULT_PATH))
+		return (end(1, NULL, ref_init, ref_dict));
+	ref_dict = dictionary_construct();
+	if (ref_dict == NULL)
+		return (end(1, NULL, ref_init, ref_dict));
+	if (!dictionary_apply_init(ref_dict, ref_init))
+		return (end(1, NULL, ref_init, ref_dict));
+	ref_elem = ref_dict->head;
+	while (ref_elem)
+	{
+		if (!contains_keys(dict, ref_elem->key))
+			return (end(1, NULL, ref_init, ref_dict));
+		ref_elem = ref_elem->next;
+	}
+	return (end(0, NULL, ref_init, ref_dict));
+}
+
 int	main(int argc, char **argv)
 {
 	t_resolve		*res;
@@ -65,7 +107,7 @@ int	main(int argc, char **argv)
 	dict = dictionary_construct();
 	if (dict == NULL)
 		return (end(EXIT_FAILURE, res, init, dict));
-	if (!dictionary_apply_init(dict, init))
+	if (!dictionary_apply_init(dict, init) || check_initial_entries(dict))
 		return (end(EXIT_DICT_ERROR, res, init, dict));
 	if (!resolve_try_doing(res, dict))
 		return (end(EXIT_DICT_ERROR, res, init, dict));
