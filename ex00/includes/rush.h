@@ -6,7 +6,7 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 00:52:22 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 21:01:27 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:19:23 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define RUSH_H
 
 # define CIPHER_UNIT 3
+# define TRADITION_MAX 20
 # define DEFAULT_PATH "./resources/numbers.dict"
 # define BUFFER_MAX 512
 
