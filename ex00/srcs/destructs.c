@@ -6,13 +6,21 @@
 /*   By: jkong <jkong@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/23 02:42:11 by jkong             #+#    #+#             */
-/*   Updated: 2022/01/23 20:34:12 by jkong            ###   ########.fr       */
+/*   Updated: 2022/01/23 21:54:46 by jkong            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rush.h"
 
 #include <stdlib.h>
+
+void	set_null(void **p1, void **p2)
+{
+	if (p1)
+		*p1 = NULL;
+	if (p2)
+		*p2 = NULL;
+}
 
 void	resolve_destruct(t_resolve *this)
 {
@@ -33,7 +41,7 @@ void	resolve_destruct(t_resolve *this)
 		free(elem);
 		elem = next;
 	}
-	this->tail = NULL;
+	set_null(&this->head, &this->tail);
 	free(this);
 }
 
@@ -52,7 +60,7 @@ void	dictionary_destruct(t_dictionary *this)
 		free(elem);
 		elem = next;
 	}
-	this->tail = NULL;
+	set_null(&this->head, &this->tail);
 	free(this);
 }
 
@@ -71,7 +79,7 @@ void	dict_init_destruct(t_dict_init *this)
 		free(elem);
 		elem = next;
 	}
-	this->temp_tail = NULL;
+	set_null(&this->temp_head, &this->temp_tail);
 	elem = this->final_head;
 	while (elem)
 	{
@@ -80,6 +88,6 @@ void	dict_init_destruct(t_dict_init *this)
 		free(elem);
 		elem = next;
 	}
-	this->final_tail = NULL;
+	set_null(&this->final_head, &this->final_tail);
 	free(this);
 }
