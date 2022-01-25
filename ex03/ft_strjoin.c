@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 10:47:31 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/20 14:07:11 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/25 16:19:05 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ char	*ft_strjoin(int size, char **strs, char *sep)
 	if (size == 0)
 	{
 		result = (char *)malloc(1);
-		result = "";
+		result[0] = '\0';
 		return (result);
 	}
 	alloc_size = 1 + count_strs_len(size, strs, sep);
