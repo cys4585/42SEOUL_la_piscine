@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 14:08:03 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/20 19:03:35 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/25 16:31:51 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ char	*convert_to_base(int nbr, char *base_to, int base_t, int sign)
 	i = str_malloc(&base_nbr, nbr, base_t, sign);
 	if (i == -1)
 		return (NULL);
-	if (sign == -1)
+	if (nbr == 0)
+		base_nbr[0] = base_to[0];
+	else if (sign == -1)
 		base_nbr[0] = '-';
 	while (nbr != 0)
 	{
