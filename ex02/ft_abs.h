@@ -6,13 +6,13 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 20:38:14 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/20 20:43:12 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/25 16:51:55 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_ABS_H
 # define FT_ABS_H
 
-# define ABS(Value) ((Value) >= 0 ? (Value) : (-Value))
+# define ABS(Value) ((Value) >= 0 ? (Value) : -(Value))
 
 #endif
