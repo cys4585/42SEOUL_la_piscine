@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 17:06:39 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/26 11:18:33 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/26 11:47:02 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	insert_str(t_stock_str *stock_str_p, char **str_p)
 		stock_str_p->copy[i] = (*str_p)[i];
 		i++;
 	}
+	stock_str_p->copy[i] = '\0';
 	return (1);
 }
 
