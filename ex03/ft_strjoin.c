@@ -6,13 +6,13 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 10:47:31 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/25 16:19:05 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/26 21:39:49 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
-int	count_strs_len(int size, char **strs, char *sep)
+int	count_alloc_size(int size, char **strs, char *sep)
 {
 	int	i;
 	int	j;
@@ -26,13 +26,16 @@ int	count_strs_len(int size, char **strs, char *sep)
 		while (strs[i][j] != '\0')
 			j++;
 		len += j;
+		if (i != size - 1)
+		{
+			j = 0;
+			while (sep[j] != '\0')
+				j++;
+			len += j;
+		}
 		i++;
 	}
-	i = 0;
-	while (sep[i] != '\0')
-		i++;
-	len += i;
-	return (len);
+	return (len + 1);
 }
 
 void	join(int size, char **strs, char *sep, char *dest)
@@ -48,11 +51,7 @@ void	join(int size, char **strs, char *sep, char *dest)
 	{
 		str_i = 0;
 		while (strs[strs_idx][str_i] != '\0')
-		{
-			dest[dest_i] = strs[strs_idx][str_i];
-			dest_i++;
-			str_i++;
-		}
+			dest[dest_i++] = strs[strs_idx][str_i++];
 		if (strs_idx != size - 1)
 		{
 			sep_i = 0;
@@ -61,6 +60,7 @@ void	join(int size, char **strs, char *sep, char *dest)
 		}
 		strs_idx++;
 	}
+	dest[dest_i] = '\0';
 }
 
 char	*ft_strjoin(int size, char **strs, char *sep)
@@ -70,14 +70,14 @@ char	*ft_strjoin(int size, char **strs, char *sep)
 
 	if (size == 0)
 	{
-		result = (char *)malloc(1);
+		result = (char *)malloc(sizeof(char) * 1);
 		result[0] = '\0';
 		return (result);
 	}
-	alloc_size = 1 + count_strs_len(size, strs, sep);
+	alloc_size = count_alloc_size(size, strs, sep);
 	result = (char *)malloc(sizeof(char) * alloc_size);
 	if (result == NULL)
-		return (result);
+		return (NULL);
 	join(size, strs, sep, result);
 	return (result);
 }
