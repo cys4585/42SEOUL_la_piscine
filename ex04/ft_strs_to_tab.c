@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 17:06:39 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/26 15:59:28 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/27 11:36:23 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	insert_str(t_stock_str *stock_str_p, char **str_p)
 		i++;
 	stock_str_p->size = i;
 	stock_str_p->str = *str_p;
-	stock_str_p->copy = (char *)malloc(sizeof(char) * i);
+	stock_str_p->copy = (char *)malloc(sizeof(char) * (i + 1));
 	if (stock_str_p->copy == NULL)
 		return (0);
 	i = 0;
@@ -44,7 +44,7 @@ struct s_stock_str	*ft_strs_to_tab(int ac, char **av)
 
 	if (ac < 1)
 		return (NULL);
-	stock_str_arr = malloc(sizeof(t_stock_str) * ac + 1);
+	stock_str_arr = malloc(sizeof(t_stock_str) * (ac + 1));
 	if (stock_str_arr == NULL)
 		return (NULL);
 	i = 0;
@@ -60,6 +60,8 @@ struct s_stock_str	*ft_strs_to_tab(int ac, char **av)
 		}
 		i++;
 	}
+	stock_str_arr[i].size = 0;
 	stock_str_arr[i].str = 0;
+	stock_str_arr[i].copy = 0;
 	return (stock_str_arr);
 }
