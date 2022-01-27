@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/25 17:06:39 by youngcho          #+#    #+#             */
-/*   Updated: 2022/01/27 11:41:03 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/01/27 15:57:32 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ struct s_stock_str	*ft_strs_to_tab(int ac, char **av)
 	int			j;
 	t_stock_str	*stock_str_arr;
 
-	if (ac < 1)
-		return (NULL);
 	stock_str_arr = malloc(sizeof(t_stock_str) * (ac + 1));
 	if (stock_str_arr == NULL)
 		return (NULL);
