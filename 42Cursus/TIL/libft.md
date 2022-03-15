@@ -68,7 +68,7 @@
 
   - SYNOPSIS
 
-    - `int is alpha(int c);`
+    - `int isalpha(int c);`
 
   - DESCRIPTION
 
@@ -77,8 +77,8 @@
 
   - RETURN VALUE
 
-    - false -> 0
-    - true -> 1
+    - True -> 1
+    - False -> 0
 
   - Solve
 
@@ -97,3 +97,29 @@
     - argument를 int 타입으로 받아야 하는 이유? 받아도 되는 이유?
       - C언에서 문자를 넣으면 자동으로 아스키 코드에 해당하는 숫자로 들어가기 때문
       - 즉, 'a'와 같은 char 타입으로 집어 넣어도 자동으로 int 타입으로 형변환 되어서 들어가게 된다.
+
+- `isdigit`
+
+  - SYNOPSIS
+
+    - `int isdigit(int c);`
+
+  - DESCRIPTION
+
+    - argument가 decimal digit character인지 test하는 함수
+
+  - RETURN VALUE
+
+    - True -> 1
+    - False -> 0
+
+  - Solve
+
+    - ```c
+      int	ft_isdigit(int c)
+      {
+      	if (48 <= c && c <= 57)
+      		return (1);
+      	return (0);
+      }
+      ```
