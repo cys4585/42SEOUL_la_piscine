@@ -415,9 +415,28 @@
 - Solve
 
   - ```c
+    #include <stddef.h>
     
+    void	*ft_memcpy(void *restrict dst, const void *restrict src, size_t n)
+    {
+    	unsigned char	*dst_p;
+    	unsigned char	*src_p;
+    	size_t			i;
+    
+    	if (dst == NULL && src == NULL)
+    		return (dst);
+    	dst_p = (unsigned char *) dst;
+    	src_p = (unsigned char *) src;
+    	i = 0;
+    	while (i < n)
+    	{
+    		dst_p[i] = src_p[i];
+    		i++;
+    	}
+    	return (dst);
+    }
     ```
-
+  
 - Questions
 
   1. `restrict`
@@ -459,8 +478,4 @@
      
        - `restrict` 키워드는 명시적 제약이다. `restrict` 포인터를 써놓고 같은 메모리를 역참조하는 포인터를 만들어도 컴파일 에러를 발생하지 않기 때문에 논리적 오류를 범할 가능성이 있다.
 
-  2. 원본함수와 어느정도 같아야 하는가?
-     - [libft]
-       library 함수들을 구현할 때, 원본 함수와 어느정도까지 똑같아야 할까요..?
-       예를들면 지금 memcpy를 구현하는 중인데, 같은 상황에서 원본 함수는 'illegal hardware instruction'가 뜨는데, 제 함수는 'segmentation fault'가 뜬다던지, 
-       원본 함수는 에러가 발생하는데, 제 함수는 에러가 발생하지 않는다던지 하면 똑같이 되도록 해야할까요..?
+  2. `dst == NUL && src == NULL` 일 때 예외처리해주는 이유?
