@@ -282,7 +282,9 @@
     
     size_t	ft_strlen(const char *s)
     {
-    	size_t size = 0;
+    	size_t	size;
+    
+    	size = 0;
     	while (s[size])
     		size++;
     	return (size);
@@ -406,11 +408,11 @@
 
 - DESCRIPTION
 
-  - 메모리 영역 `src` 에서 메모리 영역 `dst` 로 `n byte` 만큼 복사한다. 메모리 영역은 겹치지 않아야 한다. 메모리 영역이 겹치는 경우 `memmove()` 함수를 사용해야 한다.
+  - 메모리 영역 `src` 에서 메모리 영역 `dst` 로 `n byte` 만큼 복사한다. 메모리 영역은 겹치지 않아야 한다. 메모리 영역이 겹치는 경우(overlap) `memmove()` 함수를 사용해야 한다.
 
 - RETURN VALUE
 
-  - `dst`
+  - 포인터 `dst`
 
 - Solve
 
@@ -423,7 +425,7 @@
     	unsigned char	*src_p;
     	size_t			i;
     
-    	if (dst == NULL && src == NULL)
+    	if (dst == src)
     		return (dst);
     	dst_p = (unsigned char *) dst;
     	src_p = (unsigned char *) src;
@@ -478,4 +480,134 @@
      
        - `restrict` 키워드는 명시적 제약이다. `restrict` 포인터를 써놓고 같은 메모리를 역참조하는 포인터를 만들어도 컴파일 에러를 발생하지 않기 때문에 논리적 오류를 범할 가능성이 있다.
 
-  2. `dst == NUL && src == NULL` 일 때 예외처리해주는 이유?
+#### `memmove()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    void	*memmove(void *dst, const void *src, size_t len);
+    ```
+
+- DESCRIPTION
+
+  - `src`에서 `dst`로 `len byte` 만큼 복사한다. 
+  - `src`와 `dst`는 overlap될 수 있다. 복사는 항상 non-destructive manner(비파괴적인 방식)으로 수행된다.
+
+- RETURN VALUE
+
+  - 포인터 `dst`
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    void	*ft_memmove(void *dst, const void *src, size_t len)
+    {
+    	size_t	i;
+    
+    	if (len == 0 || dst == src)
+    		return (dst);
+      // src < dst이고, dst와 src가 overlap되면 뒤에서부터 copy한다.
+    	if (src < dst && dst < src + len)
+    	{
+    		while (0 <= --len)
+    		{
+    			((unsigned char *)dst)[len] = ((unsigned char *)src)[len];
+          // len은 항상 0 이상이기 때문에, break point를 설정해준다.
+    			if (len == 0)
+    				break ;
+    		}
+    	}
+    	else
+    	{
+    		i = 0;
+    		while (i < len)
+    		{
+    			((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
+    			i++;
+    		}
+    	}
+    	return (dst);
+    }
+    ```
+
+- Questions
+  1. **비파괴적인 방식으로 복사**한다는게 무엇인가?
+     - `dst`와 `src`의 메모리 영역이 overlap되면 복사하는 과정에서 값이 오염될 수 있다. 이를 방지하는 방식을 비파괴적인 방식이라고 한다.
+
+#### `strlcpy()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    size_t	strlcpy(char *restrict dst, const char *restrict src, size_t dstsize);
+    ```
+
+- DESCRIPTION
+
+  - 문자열을 복사한다. `strncpy()` 보다 안전하고 일관성 있고 오류가 적은 대체품으로 설게되었다.
+  - `dst` 버퍼의 전체 크기를 사용하고, 공간이 있는 경우 NUL-termination을 보장한다. NUL을 위한 공간은 `dstsize`에 포함되어야 한다.
+  - `src`에서 `dst`로 `dstsiz - 1` 글자를 복사하고, `dstsize`가 0이 아닌 경우 결과를 NUL 종료한다.
+  - `dst`와 `src`가 overlap되는 경우, 동작이 정의되지 않는다.
+
+- RETURN VALUE
+
+  - `src`의 길이(복사를 시도한 문자열의 총 길이)
+  - `return value >= dstsize` 이면 복사가 제대로 된 것이 아니다. 이를 처리하는 것은 호출자의 책임이다.
+
+- RETURN VALUE
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+    {
+    	size_t	i;
+    
+    	i = 0;
+      // dstsize - 1까지 반복 or src 문자열 끝까지 반복
+    	while (i + 1 < dstsize && src[i] != '\0')
+    	{
+    		dst[i] = src[i];
+    		i++;
+    	}
+    	dst[i] = '\0';
+    	while (src[i] != '\0')
+    		i++;
+    	return (i);
+    }
+    ```
+
+#### `strlcat()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    size_t	strlcat(char *dst, const char *src, size_t dstsize);
+    ```
+
+- DESCRIPTION
+
+  - 문자을 연결한다. `strncat()`보다 안전하고 일관성 있고 오류가 적은 대체품으로 설계되었다.
+  - `dst` 버퍼의 전체 크기를 사용하고, 공간이 있는 경우 NUL-termination을 보장한다. NUL을 위한 공간은 `dstsize`에 포함되어야 한다.
+  - `dst`의 끝에 `src` 문자열을 연결한다. 최대 `dstsize - strlen(dst) - 1` 글자를 추가한다. 그런 다음 `dstsize == 0` 이거나 `dst` 문자열이 `dstsize`보다 길지 않는 한 NUL 종료된다.
+
+- RETURN VALUE
+
+  - (`dst` 초기 길이 / `dstsize` 중 작은 값) + `src`의 길이
+  - 
+
+- Solve
+
+- Questions
+
+  1. return value: **(`dst` 초기 길이 / `dstsize` 중 작은 값) + `src`의 길이**인 이유
+     - 
+
+#### 
