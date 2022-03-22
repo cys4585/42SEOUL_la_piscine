@@ -136,9 +136,9 @@
 
   1. argument를 int 타입으로 받아야 하는 이유? 받아도 되는 이유?
 
-     - C언에서 문자를 넣으면 자동으로 아스키 코드에 해당하는 숫자로 들어가기 때문
-
-     - 즉, 'a'와 같은 char 타입으로 집어 넣어도 자동으로 int 타입으로 형변환 되어서 들어가게 된다.
+     - C언에서 문자를 넣으면 자동으로 아스키 코드에 해당하는 숫자로 들어간다.
+     - `char` 타입보다 범위가 더 큰 `int` 타입으로 받음으로써 인자를 안전하게 받을 수 있다. 
+       - `char` 타입으로 받으면 언더플로우or오버플로우가 나는데, 이렇게 되면 의도한 동작을 할 수 없다. `int`로 받으면 보다 안전하게 받을 수 있다.
 
 #### `isdigit()`
 
@@ -438,7 +438,7 @@
     	return (dst);
     }
     ```
-  
+
 - Questions
 
   1. `restrict`
@@ -446,9 +446,9 @@
      - **'포인터 변수의 주소가 겹치지 않는다'**고 컴파일러에게 알려줌으로써, 최적화를 할 수있도록 하는 키워드
 
      - ex)
-     
+
        - 위와 같이 포인터를 역참조하여 값을 증가시키는 두 함수가 있다고 하면, 컴파일러는 이 두 함수를 다르게 해석한다.
-     
+
        - ```c
          // add1()
          load R1 ← *c
@@ -461,7 +461,7 @@
          add R2 += R1
          set R2 → *b
          ```
-     
+
        - ```c
          // add2()
          load R1 ← *c
@@ -473,11 +473,11 @@
          add R2 += R1
          set R2 → *b
          ```
-     
+
        - `add1()` 에서는 이미 R1 레지스터(임시공간)에 로드했던 `c` 를 또 한번 로드한다. 그 이유는 다른 포인터에 의해서 `c` 의 값이 바뀌었을 가능성이 있기 때문이다.
-     
+
        - `add2()` 에서는 이전에 로드했던 `c` 값이 아직 R1 레지스터에 존재하고, 컴파일러는 이 공간이 **다른 포인터에 의해 값이 변경되지 않는다**고 알고있기 때문에 기존 R1의 값을 그대로 사용한다.
-     
+
        - `restrict` 키워드는 명시적 제약이다. `restrict` 포인터를 써놓고 같은 메모리를 역참조하는 포인터를 만들어도 컴파일 에러를 발생하지 않기 때문에 논리적 오류를 범할 가능성이 있다.
 
 #### `memmove()`
@@ -534,6 +534,7 @@
     ```
 
 - Questions
+
   1. **비파괴적인 방식으로 복사**한다는게 무엇인가?
      - `dst`와 `src`의 메모리 영역이 overlap되면 복사하는 과정에서 값이 오염될 수 있다. 이를 방지하는 방식을 비파괴적인 방식이라고 한다.
 
@@ -596,18 +597,317 @@
 
   - 문자을 연결한다. `strncat()`보다 안전하고 일관성 있고 오류가 적은 대체품으로 설계되었다.
   - `dst` 버퍼의 전체 크기를 사용하고, 공간이 있는 경우 NUL-termination을 보장한다. NUL을 위한 공간은 `dstsize`에 포함되어야 한다.
-  - `dst`의 끝에 `src` 문자열을 연결한다. 최대 `dstsize - strlen(dst) - 1` 글자를 추가한다. 그런 다음 `dstsize == 0` 이거나 `dst` 문자열이 `dstsize`보다 길지 않는 한 NUL 종료된다.
+  - `dst`의 끝에 `src` 문자열을 연결한다. 최대 `dstsize - strlen(dst) - 1` 글자를 추가한다. 그런 다음 `dstsize == 0` 이거나 `dst` 문자열이 `dstsize`보다 길지 않는 한 NUL 종료된다. (실제로 이것은 `dstsize`가 올바르지 않거나 `dst`가 적절한 문자열이 아님을 의미하므로 발생해서는 안된다.)
 
 - RETURN VALUE
 
   - (`dst` 초기 길이 / `dstsize` 중 작은 값) + `src`의 길이
-  - 
 
 - Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
+    {
+    	size_t	init_len_of_dst;
+    	size_t	i;
+    
+    	init_len_of_dst = 0;
+    	while (dst[init_len_of_dst])
+    		init_len_of_dst++;
+    	i = 0;
+      // dstsize == 0 이거나 dst 문자열이 dstsize 보다 길면
+      if (dstsize == 0 || dstsize < init_len_of_dst)
+    	{
+    		while (src[i])
+    			i++;
+    		return (dstsize + i);
+    	}
+    	while (init_len_of_dst + i + 1 < dstsize && src[i])
+    	{
+    		dst[init_len_of_dst + i] = src[i];
+    		i++;
+    	}
+    	dst[init_len_of_dst + i] = '\0';
+    	while (src[i])
+    		i++;
+    	return (init_len_of_dst + i);
+    }
+    ```
 
 - Questions
 
   1. return value: **(`dst` 초기 길이 / `dstsize` 중 작은 값) + `src`의 길이**인 이유
-     - 
+     - `dst`가 `dstsize`보다 큰 경우는 문자열을 이어붙일 수가 없다. 
+     - `dst` 문자열이 잘리는지를 감지를 간단하게 하기 위해 수행된다.
 
-#### 
+#### `toupper()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <ctype.h>
+    int	toupper(int c);
+    ```
+
+- DESCRIPTION
+
+  - 소문자를 해당 대문자로 변환한다.
+  - argument는 `unsigned char` or `EOF` 값으로 표현할 수 있어야 한다.
+
+- RETURN VALUE
+
+  - argument에 대응되는 대문자가 있는 경우 => return 해당 대문자
+  - else => return argument 그대로
+
+- Solve
+
+  - ```c
+    int	ft_toupper(int c)
+    {
+    	if ('a' <= c && c <= 'z')
+    		return (c - ('a' - 'A'));
+    	return (c);
+    }
+    ```
+
+#### `tolower()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <ctype.h>
+    int	tolower(int c);
+    ```
+
+- DESCRIPTION
+
+  - 대문자를 해당 소문자로 변환한다.
+
+  - argument는 `unsigned char` or `EOF` 값으로 표현할 수 있어야 한다.
+
+- RETURN VALUE
+
+  - argument에 대응되는 소문자가 있는 경우 => return 해당 소문자
+  - else => return argument 그대로
+
+- Solve
+
+  - ```c
+    int	ft_tolower(int c)
+    {
+    	if ('A' <= c && c <= 'Z')
+    		return (c - ('A' - 'a'));
+    	return (c);
+    }
+    ```
+
+#### `strchr()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    char	*strchr(const char *s, int c);
+    ```
+
+- DESCRIPTION
+
+  - `s`가 가리키는 문자열에서 `c` 문자가 처음 나타나는 위치를 찾는다. (Null 문자도 문자열의 일부로 간주)
+
+- RETURN VALUE
+
+  - 문자의 위치를 찾으면 => return 문자에 대한 포인터
+  - 못찾으면 => return NULL
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    char	*ft_strchr(const char *s, int c)
+    {
+    	int		i;
+    
+    	i = 0;
+    	while (s[i])
+    	{
+    		if (s[i] == c)
+    			return ((char *)s + i);
+    		i++;
+    	}
+    	if (s[i] == c)
+    		return ((char *)s + i);
+    	return (NULL);
+    }
+    ```
+
+#### `strrchr()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    char	*strrchr(const char *s, int c);
+    ```
+
+- DESCRIPTION
+
+  - `s`가 가리키는 문자열에서 `c` 문자가 마지막으로 나타나는 위치를 찾는다. (Null 문자도 문자열의 일부로 간주)
+
+- RETURN VALUE
+
+  - 문자의 위치를 찾으면 => return (문자에 대한 포인터)
+  - 못찾으면 => return NULL
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    char	*ft_strrchr(const char *s, int c)
+    {
+    	char	*result;
+    	int		i;
+    
+    	result = NULL;
+    	i = 0;
+    	while (s[i])
+    	{
+    		if (s[i] == c)
+    			result = (char *)s + i;
+    		i++;
+    	}
+    	if (s[i] == c)
+    		result = (char *)s + i;
+    	return (result);
+    }
+    ```
+
+#### `strncmp()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    int	strncmp(const char *s1, const char *s2, size_t n);
+    ```
+
+- DESCRIPTION
+
+  - null 문자로 끝나는 문자열 `s1`과 `s2`를 사전식으로 비교한다.
+  - `n`개 이하의 문자를 비교한다. `strncmp()`는 바이너리 데이터가 아닌 문자열을 비교하도록 설계되었기 때문에 `'\0'` 문자 뒤에 나타나는 문자는 비교되지 않는다.
+  - 아스키 코드값으로 비교한다.
+
+- RETURN VALUE
+
+  - `s1` 문자열과 `s2` 문자열의 문자가 다른 시점의 아스키 코드값의 차이를 리턴한다.
+  - `s1 == s2` => `return 0`
+  - `s1 < s2` => `return 음의 정수`
+  - `s1 > s2` => `return 양의 정수`
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    int	ft_strncmp(const char *s1, const char *s2, size_t n)
+    {
+    	size_t	i;
+    
+    	i = 0;
+    	while (s1[i] && s2[i] && i < n)
+    	{
+    		if (s1[i] != s2[i])
+    			return ((int)(s1[i] - s2[i]));
+    		i++;
+    	}
+    	if (i == n)
+    		return (0);
+    	return ((int)(s1[i] - s2[i]));
+    }
+    ```
+
+#### `memchr()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    void	*memchr(const void *s, int c, size_t n);
+    ```
+
+- DESCRIPTION
+
+  - `c`의 첫 번째 인스턴스에 대해 `s`가 가리키는 메모리 영역의 초기 `n` byte를 스캔한다. `c`와 `s`가 가리키는 메모리 영역의 바이트는 모두 `unsigned char`로 해석된다.
+  - 메모리 영역 `s`의 처음부터 `n` byte에서 `c`가 처음 나타나는 위치를 찾는다.
+
+- RETURN VALUE
+
+  - 위치를 찾으면 => return 그 위치에 대한 포인터
+  - 못찾으면 => return NULL
+
+- Solve
+
+  -  ```c
+     #include <stddef.h>
+     
+     void	*ft_memchr(const void *s, int c, size_t n)
+     {
+     	size_t	i;
+     
+     	i = 0;
+     	while (i < n)
+     	{
+     		if (((unsigned char *)s)[i] == (unsigned char)c)
+     			return ((void *)s + i);
+     		i++;
+     	}
+     	return (NULL);
+     }
+     ```
+
+#### `memcmp()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    int	memcmp(const void *s1, const void *s2, size_t n);
+    ```
+
+- DESCRIPTION
+
+  - 메모리 영역 `s1`과 `s2`의 처음 `n` byte를 비교한다.
+
+- RETURN VALUE
+
+  - `s1`이 `s2` 보다 작으면 음의 정수, 같으면 0, 크면 양의 정수
+  - `s1 == s2` => `return 0`
+  - `s1 < s2` => `return 음의 정수`
+  - `s1 > s2` => `return 양의 정수`
+
+- Solve
+
+  - ```c
+    #include <stddef.h>
+    
+    int	ft_memcmp(const void *s1, const void *s2, size_t n)
+    {
+    	unsigned char	*s1_p;
+    	unsigned char	*s2_p;
+    	size_t			i;
+    
+    	s1_p = (unsigned char *)s1;
+    	s2_p = (unsigned char *)s2;
+    	i = 0;
+    	while (i < n)
+    	{
+    		if (s1_p[i] != s2_p[i])
+    			return (s1_p[i] - s2_p[i]);
+    		i++;
+    	}
+    	return (0);
+    }
+    ```
