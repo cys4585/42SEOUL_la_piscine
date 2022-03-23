@@ -884,7 +884,7 @@
 - RETURN VALUE
 
   - `s1`이 `s2` 보다 작으면 음의 정수, 같으면 0, 크면 양의 정수
-  - `s1 == s2` => `return 0`
+  - ` https://www.google.com/webhp?hl=ko&sa=X&ved=0ahUKEwiA_tvWt9v2AhUTBd4KHRm0COwQPAgI s1 == s2` => `return 0`
   - `s1 < s2` => `return 음의 정수`
   - `s1 > s2` => `return 양의 정수`
 
@@ -911,3 +911,484 @@
     	return (0);
     }
     ```
+
+#### `strnstr()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    char *strnstr(const char *haystack, const char *needle, size_t len);
+    ```
+
+- DESCRIPTION
+
+  - `haystack` 문자열의 `len` 길이 만큼에서 null 종료되는 문자열 `needle`의 첫 번째 발생 위치를 찾는다.
+  - `strnstr()`은 freeBSD specific API이기 때문에 이식성이 문제가 되지 않는 경우에만 사용해야 한다.
+
+- RETURN VALUE
+
+  - `needle`이 빈 문자열이면 => return `haystack`
+  - `needle`을 못찾으면 => return `NULL`
+  - `needle`을 찾으면 => return (`needle`의 첫 번째 문자에 대한 포인터)
+
+- Solve
+
+  - ```c
+    #include "libft.h"
+    // ft_strlen(), ft_strncmp()
+    
+    char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
+    {
+    	size_t	len_h;
+    	size_t	len_n;
+    	size_t	i;
+    
+    	if (needle[0] == '\0')
+    		return ((char *)haystack);
+    	len_h = ft_strlen(haystack);
+    	len_n = ft_strlen(needle);
+    	i = 0;
+    	while ((i + len_n <= len) && (i + len_n <= len_h))
+    	{
+    		if (haystack[i] == needle[0]
+    			&& ft_strncmp(&haystack[i], needle, len_n) == 0)
+    			return ((char *)&haystack[i]);
+    		i++;
+    	}
+    	return (NULL);
+    }
+    ```
+
+- Questions
+
+  1. `haystack`과 `needle`은 무슨 뜻인가?
+
+     - 속담: Needle in a haystack. (건초더미에서 바늘 찾기)
+
+     - `haystack` - 스캔할 기본 C 문자열을 비유
+
+     - `needle` - `haystack` 내에서 검색할 작은 문자열을 비유
+
+  2. freeBSD specific API는 무슨 뜻인가?
+
+     - freeBSD란 유닉스 계열 운영체제를 말한다. freeBSD specific API란 말은 strnstr 함수는 운영체제에 specific하므로 다른 운영체제에 이식할 때는 쓰지 않는다는 뜻이다.
+
+#### `atoi()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <stdlib.h>
+    int	atoi(const char *str);
+    ```
+
+- DESCRIPTION
+
+  - `str`이 가리키는 문자열의 초기 부분을 int 타입으로 변환한다.
+
+- RETURN VALUE
+
+  - 변환성공 => return 변환한 int형 숫자
+  - 변환가능한 숫자가 없는 경우 => return 0
+
+- Solve
+
+  - ```c
+    char	*pass_space(const char *str)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\t'
+    		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+    		i++;
+    	return ((char *)str + i);
+    }
+    
+    int	check_sign(char **str_p)
+    {
+    	if (**str_p == '-')
+    	{
+    		(*str_p)++;
+    		return (-1);
+    	}
+    	else if (**str_p == '+')
+    		(*str_p)++;
+    	return (1);
+    }
+    
+    int	convert_to_int(char *str)
+    {
+    	int	num;
+    	int	i;
+    
+    	num = 0;
+    	i = 0;
+    	while ('0' <= str[i] && str[i] <= '9' && str[i])
+    	{
+    		num = num * 10 + (str[i] - '0');
+    		i++;
+    	}
+    	return (num);
+    }
+    
+    int	ft_atoi(const char *str)
+    {
+    	char	*tmp_str;
+    	int		sign;
+    
+    	tmp_str = pass_space(str);
+    	sign = check_sign(&tmp_str);
+    	return (sign * convert_to_int(tmp_str));
+    }
+    ```
+
+- Questions
+  1. 특정 값 이상부터는 `atoi`랑 결과가 다른데? 
+     - 원본 `atoi`는 int 오버플로우는 그냥 무시되고 long 오버플로우부터 결과값이 바뀐다.
+     - 그러나 이 부분은 Undefined Behavior이기 때문에 똑같을 필요는 없다.
+
+#### `calloc()`
+
+- 이 함수는 외부 함수 `malloc` 을 사용해 구현
+
+- SYNOPSIS
+
+  - ```c
+    #include <stdlib.h>
+    void	*calloc(size_t count, size_t size);
+    ```
+
+- DESCRIPTION
+  - 메모리를 할당한다. 할당된 메모리는 AltiVec 및 SSE 관련 유형을 포함한 모든 데이터 유형에 사용할수 있도록 정렬된다.
+  - `free()` 함수로 할당된 메모리를 해제한다.
+  - `malloc()` 함수는 size 바이트의 메모리를 할당하고 할당된 메모리에 대한 포인터를 반환한다.
+  - `calloc()` 함수는 `size` 바이트의 개체를 `count` 만큼 메모리를 할당하고 할당된 메모리에 대한 포인터를 반환한다. 할당된 메모리는 값이 0인 바이트로 채워진다.
+
+- RETURN VALUE
+
+  - 메모리 할당 성공 => return (할당된 메모리에 대한 포인터)
+  - 실패 => return NULL
+
+- Solve
+
+  - ```c
+    #include <stdlib.h>
+    #include "libft.h"
+    
+    void	*ft_calloc(size_t count, size_t size)
+    {
+    	void	*memory;
+    
+    	memory = malloc(count * size);
+    	if (memory == NULL)
+    		return (NULL);
+    	ft_bzero(memory, count * size);
+    	return (memory);
+    }
+    ```
+
+#### `strdup()`
+
+- SYNOPSIS
+
+  - ```c
+    #include <string.h>
+    char	*strdup(const char *s1);
+    ```
+
+- DESCRIPTION
+  - 문자열 `s1`의 복사본을 위한 충분한 메모리를 할당하고 복사를 수행하고 이에 대한 포인터를 반환한다.
+
+- RETURN VALUE
+
+  - 성공 => return 복사한 공간에 대한 포인터
+  - 실패 => return NULL
+
+- Solve
+
+  - ```c
+    #include <stdlib.h>
+    #include "libft.h"
+    
+    char	*ft_strdup(const char *s1)
+    {
+    	int		len;
+    	char	*dst;
+    	int		i;
+    
+    	len = ft_strlen(s1);
+    	dst = (char *)malloc(sizeof(char) * len);
+    	if (dst == NULL)
+    		return (NULL);
+    	i = 0;
+    	while (i < len)
+    	{
+    		dst[i] = s1[i];
+    		i++;
+    	}
+    	return (dst);
+    }
+    ```
+
+
+
+### Part 2 - Additional functions
+
+#### `substr()`
+
+- Prototype
+
+  - ```c
+    char	*ft_substr(char const *s, unsigned int start, size_t len);
+    ```
+
+- Parameters
+
+  - `s` : 부분 문자열(substring)을 생성할 원본 문자열
+  - `start`: 부분 문자열의 맨 처음 인덱스
+  - `len`: 부분 문자열의 최대 길이
+
+- Return value
+
+  - 부분 문자열
+  - 할당 실패시 -> NULL
+
+- External functions
+
+  - `malloc`
+
+- Description
+
+  - `malloc()`을 이용하여 메모리를 할당받은 후, 원본 문자열 `s`로부터 부분 문자열을 생성하여 반환한다. 부분 문자열은 인덱스 `start` 부터 시작하며, 최대 길이 `len`을 갖는다.
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `strjoin()`
+
+- Prototype
+
+  - ```c
+    
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `strtrim()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `split()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `itoa()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `strmapi()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `striteri()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+- Return value
+- External functions
+- Description
+
+#### `putchar_fd()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `putstr_fd()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `putendl_fd()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+#### `putnbr_fd()`
+
+- Prototype
+
+  - ```c
+    asd
+    ```
+
+- Parameters
+
+- Return value
+
+- External functions
+
+- Description
+
+- Solve
+
+  - ```c
+    
+    ```
+
+
+
+
+
+
+
+
+
+
+
+
+
