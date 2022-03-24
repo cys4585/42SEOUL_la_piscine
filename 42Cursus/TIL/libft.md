@@ -1147,13 +1147,19 @@
 - Parameters
 
   - `s` : 부분 문자열(substring)을 생성할 원본 문자열
-  - `start`: 부분 문자열의 맨 처음 인덱스
+
+    > The string from which to create the substring.
+  - `start`: 부분 문자열에 넣을 문자열 `s`의 맨 처음 인덱스
+
+    > The start index of the substring in the string `s`.
   - `len`: 부분 문자열의 최대 길이
+
+    > The maximum length of the substring.
 
 - Return value
 
-  - 부분 문자열
-  - 할당 실패시 -> NULL
+  > The substring.
+  > NULL if the allocation fails.
 
 - External functions
 
@@ -1163,32 +1169,112 @@
 
   - `malloc()`을 이용하여 메모리를 할당받은 후, 원본 문자열 `s`로부터 부분 문자열을 생성하여 반환한다. 부분 문자열은 인덱스 `start` 부터 시작하며, 최대 길이 `len`을 갖는다.
 
+    > Allocates (with malloc(3)) and returns a substring from the string `s`.
+    > The substring begins at index `start` and is of maximum size `len`.
+
 - Solve
 
   - ```c
+    #include <stdlib.h>
+    #include "libft.h"
     
+    char	*ft_substr(char const *s, unsigned int start, size_t len)
+    {
+    	char			*sub;
+    	unsigned int	i;
+    	size_t			s_len;
+    
+      if (s == NULL)
+        return (NULL);
+    	s_len = ft_strlen(s);
+      // start 인덱스가 말이 안되면 빈문자열을 만들어주기 위함
+    	if (s_len <= start)
+    		len = 0;
+      // s 문자열로부터 복사할 수 있는 문자열의 길이가 len 값 보다 작으면 할당할 메모리 크기가 len 보다 작아도 됨
+    	else if (s_len - start < len)
+    		len = s_len - start;
+      //  null 문자 자리 +1 해주기
+    	sub = (char *)malloc(sizeof(char) * (len + 1));
+      // 공간 할당 실패 시 return NULL
+    	if (sub == NULL)
+    		return (NULL);
+    	i = 0;
+    	while (i < len)
+    	{
+    		sub[i] = s[start + i];
+    		i++;
+    	}
+    	sub[i] = '\0';
+    	return (sub);
+    }
     ```
+
+- Questions
+
+  1.  `char const *s`의 의미?
+     - `const char *s`는 `char const *s`와 같은 의미이다. 포인터 변수 `s`가 가리키는 곳의 값을 수정할 수 없다. 포인터 변수 `s`의 값은 수정할 수 있다. (다른 곳을 가리키게 할 수 있다.)
+     - `char * const s`는 포인터 변수 `s`의 값을 수정할 수 없다. (다른 곳을 가리키게 할 수 없다.) 포인터 자체가 상수화 된 것이다.
 
 #### `strjoin()`
 
 - Prototype
 
   - ```c
-    
+    char	*ft_strjoin(char const *s1, char const *s2);
     ```
 
 - Parameters
 
+  - `s1`: 접두 문자열
+
+    > The prefix string.
+
+  - `s2`:  접미 문자열
+
+    > The suffix string.
+
 - Return value
+
+  > The new string.
+  > NULL if the allocation fails.
 
 - External functions
 
+  - `malloc`
+
 - Description
+
+  - `malloc()`을 활용해 새로운 문자열 공간을 할당하고, 문자열 `s1`과 `s2`를 연결한 새로운 문자열을 반환한다.
+
+    > Allocates (with malloc(3)) and returns a new string, which is the result of the concatenation of `s1` and `s2`.
 
 - Solve
 
   - ```c
+    #include <stdlib.h>
+    #include "libft.h"
     
+    char	*ft_strjoin(char const *s1, char const *s2)
+    {
+    	char	*new_str;
+    	size_t	len_s1;
+    	size_t	len_s2;
+    
+    	if (s1 == NULL && s2 == NULL)
+    		return (NULL);
+    	if (s1 == NULL)
+    		return (ft_strdup(s2));
+    	if (s2 == NULL)
+    		return (ft_strdup(s1));
+    	len_s1 = ft_strlen(s1);
+    	len_s2 = ft_strlen(s2);
+    	new_str = (char *)malloc(sizeof(char) * (len_s1 + len_s2 + 1));
+    	if (new_str == NULL)
+    		return (NULL);
+    	ft_strlcpy(new_str, s1, len_s1 + 1);
+    	ft_strlcat(new_str, s2, len_s1 + len_s2 + 1);
+    	return (new_str);
+    }
     ```
 
 #### `strtrim()`
@@ -1196,21 +1282,61 @@
 - Prototype
 
   - ```c
-    asd
+    char	*ft_strtrim(char const *s1, char const *set);
     ```
 
 - Parameters
 
+  - `s1`: 양 쪽을 잘라낼 원본 문자열
+
+    > The string to be split.
+
+  - `s2`: 제거될 문자들의 집합
+
+    > The delimiter character.
+
 - Return value
+
+  - 문자가 제거된 문자열. 할당 실패 시, NULL
+
+    > The trimmed string.
+    > NULL if the allocation fails.
 
 - External functions
 
+  - `malloc`
+
 - Description
+
+  - `malloc()`을 이용하여 메모리를 할당하고,  `set`에 지정된 문자들이 문자열의 시작과 끝에서 제거된 `s1` 문자열의 사본을 반환한다.
+
+    > Allocates (with malloc()) and returns a copy of `s1` with the characters specified in `set` removed from the beginning and the end of the string.
 
 - Solve
 
   - ```c
+    #include <stdlib.h>
+    #include "libft.h"
     
+    char	*ft_strtrim(char const *s1, char const *set)
+    {
+    	int		begin_idx;
+    	int		end_idx;
+    
+    	if (s1 == NULL)
+    		return (NULL);
+    	if (set == NULL)
+    		return (ft_strdup(s1));
+    	begin_idx = 0;
+    	while (s1[begin_idx] && ft_strchr(set, s1[begin_idx]))
+    		begin_idx++;
+    	end_idx = ft_strlen(s1) - 1;
+    	while (0 <= end_idx && ft_strchr(set, s1[end_idx]))
+    		end_idx--;
+    	if (end_idx < begin_idx)
+    		return (ft_strdup(""));
+    	return (ft_substr(s1, begin_idx, end_idx - begin_idx + 1));
+    }
     ```
 
 #### `split()`
@@ -1218,7 +1344,7 @@
 - Prototype
 
   - ```c
-    asd
+    char	**ft_split(char const *s, char c);
     ```
 
 - Parameters
