@@ -1349,33 +1349,181 @@
 
 - Parameters
 
+  - `s`: 분할할 문자열
+
+    > The string to be split.
+
+  - `c`: 구분자
+
+    > The delimiter character.
+
 - Return value
+
+  - split을 통해 분할된 문자열의 배열
+
+    > The array of new strings resulting from the split.
+    > NULL if the allocation fails.
 
 - External functions
 
+  - `malloc`, `free`
+
 - Description
+
+  - `malloc()`을 이용하여 메모리를 할당하고, 구분자 `c`를 기준으로 문자열 `s`를 분할하여 그 결과를 담은 새로운 문자열 배열을 반환한다. 문자열 배열의 끝은 NULL 포인터로 끝나야 한다.
+
+    > Allocates (with malloc()) and returns an array of strings obtained by splitting `s` using the character `c` as a delimiter. The array must end with a NULL pointer.
 
 - Solve
 
   - ```c
+    #include <stdlib.h>
+    #include "libft.h"
     
+    // 문자열을 분할해서 담을 배열의 크기를 계산하는 함수
+    int	count_size(char const *s, char c)
+    {
+    	int	cnt;
+    	int	flag;
+    	int	i;
+    
+    	cnt = 0;
+      // split 할 지점을 판별하기 위한 flag
+    	flag = 0;
+    	i = 0;
+    	while (s[i])
+    	{
+    		if (flag == 0 && s[i] != c)
+    			flag = 1;
+    		else if (flag == 1 && s[i] == c)
+    		{
+    			cnt++;
+    			flag = 0;
+    		}
+    		i++;
+    	}
+    	if (flag == 1)
+    		cnt++;
+    	return (cnt);
+    }
+    
+    // 문자열을 delimiter를 기준으로 분할해서 배열에 담는 함수
+    int	split_str(char **dst_arr, char const *s, char c, int s_len)
+    {
+    	int		start;
+    	int		flag;
+    	int		i;
+    
+    	start = 0;
+    	flag = 0;
+    	i = 0;
+      // s 문자열의 null-terminate 문자까지 반복문 돈다. (마지막이 c 가 아닌 문자로 끝나도 배열에 분할한 문자열을 담을 수 있도록 하기 위함)
+    	while (i <= s_len)
+    	{
+    		if (flag == 0 && s[i] != c)
+    		{
+    			start = i;
+    			flag = 1;
+    		}
+    		else if (flag == 1 && (s[i] == c || s[i] == '\0'))
+    		{
+    			*dst_arr = ft_substr(s, start, i - start);
+          // 공간할당에 실패하면 비정상종료임을 알려줌으로써 공간 해제(free)를 할 수 있도록 한다.
+    			if (*dst_arr == NULL)
+    				return (0);
+    			dst_arr++;
+    			flag = 0;
+    		}
+    		i++;
+    	}
+    	return (1);
+    }
+    
+    // 할당했던 모든 공간을 해제 (각 배열의 요소들도 각각 동적할당을 해줬기 때문에 직접 해제해줘야 한다.)
+    void	array_free(char **arr)
+    {
+    	int	i;
+    
+    	i = 0;
+    	while (arr[i])
+    		free(arr[i++]);
+    	free(arr);
+    }
+    
+    char	**ft_split(char const *s, char c)
+    {
+    	int		size;
+    	char	**dst_arr;
+    
+      // 1. 필요한 공간의 크기를 구한다.
+    	size = count_size(s, c);
+      // 2. (필요한 공간 + 1)만큼 공간할당을 한다. (마지막 NULL 자리)
+    	dst_arr = (char **)malloc(sizeof(char **) * (size + 1));
+    	if (dst_arr == NULL)
+    		return (NULL);
+    	dst_arr[size] = NULL;
+      // 3. 문자열을 split 해서 공간할당을 한 배열에 각각 담는다.
+    	if (split_str(dst_arr, s, c, ft_strlen(s)) == 0)
+    	{
+        // split한 문자열을 담을 공간할당에 실패하면 이 때까지 할당했던 공간을 모두 수거한다.
+    		array_free(dst_arr);
+    		return (NULL);
+    	}
+    	return (dst_arr);
+    }
     ```
+
+- Notes
+
+  1. 문자열의 양 쪽 끝 문자가 delimiter 일수도, 일반 문자 일수도 있다.
+
+     - `s = "abc&def&"`
+     - `s = "abc&def"`
+       - '\0'` 문자까지 반복문이 돌도록 해서, delimiter와 같은 케이스로 묶음으로써 해결
+
+     - `s = "&abc&def"`
+       - `flag`의 init을 통해 첫 글자가 delimiter인 경우 그냥 지나가도록 해결
+
+  2. delimiter가 이어질 수도 있다.
+
+     -  `s = "abc&def&&abc"`
+       - `flag` 를 둬서 (delimiter or 일반 문자)가 이어지는 경우는 그냥 지나가도록 해결
+
+  3. 공간 할당 실패 시
+
+     - 이 때까지 할당해줬던 모든 공간을 해제해야 한다.
 
 #### `itoa()`
 
 - Prototype
 
   - ```c
-    asd
+    char	*ft_itoa(int n);
     ```
 
 - Parameters
 
+  - `n`: 변환할 정수
+
+    > The integer to convert.
+
 - Return value
+
+  - 정수를 표현할 문자열. 할당 실패 시 NULL
+
+    > The string representing the integer.
+    > NULL if the allocation fails.
 
 - External functions
 
+  - `malloc`
+
 - Description
+
+  - `malloc()`을 이용하여 메모리를 할당하고, 인자로 받은 정수를 나타내는 문자열을 반환한다. 음수 또한 무조건 처리되어야 한다.
+
+    > Allocates (with malloc()) and returns a string representing the integer received as an argument.
+    > Negative numbers must be handled.
 
 - Solve
 
