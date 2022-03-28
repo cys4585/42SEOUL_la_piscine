@@ -302,6 +302,7 @@
      - 64bit머신
        - 64bit 사이즈의 `unsigned 정수형 (unsigned long long)`
        - 크기: `8byte(64bit)`
+     - `unsigned int`는 운영체제에 따라 사이즈가 달라지기 때문에 고정된 `size_t`를 사용한다.
   2. 매개변수를 `const char *` 로 선언한 무엇인가?
      - char pointer 변수가 가리키는 곳의 값을 수정할 수 없도록 상수취급하기 위함
      - `const char *s = "abc"`가 들어오면, s가 가리키는 곳의 값은 `"abc"`로 고정되고, 수정할 수 없다. 단, s의 값 자체를 바꿀 순 있다. (다른 곳을 가리키도록 할 수 있음)
@@ -1528,7 +1529,66 @@
 - Solve
 
   - ```c
+    #include <stdlib.h>
     
+    // 정수를 문자열로 변환할 때 필요한 문자열의 크기를 계산하는 함수 (null-terminating 문자 자리 포함)
+    int	count_size_to_allocate(int n)
+    {
+    	int	cnt;
+    
+    	if (n == 0)
+    		return (2);
+    	cnt = 0;
+      // 음수면 (- 부호) 자리 추가
+    	if (n < 0)
+    		cnt++;
+    	while (n != 0)
+    	{
+    		n /= 10;
+    		cnt++;
+    	}
+      // null-terminating 자리 추가
+    	return (cnt + 1);
+    }
+    
+    // 한 자리씩 (정수 -> 문자)로 변환하는 재귀함수
+    void	recursion_convert(char *str, int idx, int n)
+    {
+    	if (n < 0)
+    	{
+    		str[0] = '-';
+    		recursion_convert(str, idx - 1, -(n / 10));
+    		str[idx] = -(n % 10) + '0';
+    	}
+    	else if (n > 0)
+    	{
+    		recursion_convert(str, idx - 1, n / 10);
+    		str[idx] = (n % 10) + '0';
+    	}
+    }
+    
+    char	*ft_itoa(int n)
+    {
+    	int		size;
+    	char	*str;
+    	
+      // 1. 할당할 공간의 크기를 계산한다.
+    	size = count_size_to_allocate(n);
+      // 2. 공간을 할당하고 null-terminating 문자를 넣어준다.
+    	str = (char *)malloc(sizeof(char) * size);
+    	if (str == NULL)
+    		return (NULL);
+    	str[size - 1] = '\0';
+      // exception handling
+    	if (n == 0)
+    	{
+    		str[0] = '0';
+    		return (str);
+    	}
+      // 3. 재귀로 한자리씩 변환한다. (정수 -> 문자)
+    	recursion_convert(str, size - 2, n);
+    	return (str);
+    }
     ```
 
 #### `strmapi()`
@@ -1536,78 +1596,265 @@
 - Prototype
 
   - ```c
-    asd
+    char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
     ```
 
 - Parameters
 
+  - `s`: 함수를 적용할 문자열
+
+    > The string on which to iterate.
+
+  - `f`: 문자열의 각 문자에 적용할 함수
+
+    > The function to apply to each character.
+
 - Return value
+
+  - 원본 문자열에서 함수 `f`를 성공적으로 적용하여 생성된 결과 문자열. 할당 실패시, NULL
+
+    > The string created from the successive applications of `f`.
+    > Returns NULL if the allocation fails.
 
 - External functions
 
+  - `malloc`
+
 - Description
+
+  - 문자열 `s`의  각 문자에 함수 `f`를 적용하고, 해당 문자의 인덱스를 함수 `f`의 첫 번째 인자로 전달하여 `f`를 연속적으로 적용한 새로운 문자열을 생성한다. (`malloc()`)을 이용하여 메모리를 할당
+
+    > Applies the function `f` to each character of the string `s`, and passing its index as first argument to create a new string (with `malloc()`) resulting from successive applications of `f`.
 
 - Solve
 
   - ```c
+    #include <stdlib.h>
+    #include "libft.h"
     
+    char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+    {
+    	char	*dst;
+    	int		i;
+    
+    	if (s == NULL || f == NULL)
+    		return (NULL);
+    	dst = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+    	if (dst == NULL)
+    		return (NULL);
+    	i = 0;
+    	while (s[i])
+    	{
+    		dst[i] = f((unsigned int)i, s[i]);
+    		i++;
+    	}
+    	dst[i] = '\0';
+    	return (dst);
+    }
     ```
+
+- Notes
+
+  1. 함수 포인터
+
+     - `반환타입 (*함수포인터이름)(매개변수타입))`
+
+     - 함수 포인터는 반환타입과 매개변수타입이 모두 일치해야 할당이 가능하다.
+
+     - 함수 포인터 할당 ex)
+
+       - ```c
+         #include <stdio.h>
+         
+         int	sum(int a, int b)
+         {
+         	return (a + b);  
+         }
+         
+         int	main(void)
+         {
+           // 함수 포인터 선언
+           int (*f_p)(int, int);
+           
+           // 함수 포인터에 함수 할당
+           f_p = &sum;
+           // 같은 의미 (함수이름 자체에도 함수의 주소가 저장되어 있다.)
+           // f_p = sum;
+           
+           // 함수 포인터를 통한 함수 호출
+           int num = f_p(10, 20);
+          	printf("f_p(%d, %d) returns %d\n", 10, 20, num);
+           return (0);
+         }
+         ```
 
 #### `striteri()`
 
 - Prototype
 
   - ```c
-    asd
+    void	ft_striteri(char *s, void (*f)(unsigned int, char *));
     ```
 
 - Parameters
+
+  - `s`: 함수를 적용할 문자열
+
+    > The string on which to iterate.
+
+  - `f`: 문자열의 각 문자에 적용할 함수
+
+    > The function to apply to each character.
+
 - Return value
+
+  > None
+
 - External functions
+
+  > None
+
 - Description
+
+  - 인자로 전달된 문자열의 각 문자를 순회하며 함수 `f`를 적용하고, 해당 문자의 인덱스를 함수 `f`의 첫 번째 인자로 전달한다. 각 문자는 주소를 통해  `f` 함수에 전달되어 필요한 경우 수정된다.
+
+    > Applies the function `f` to each character of the string passed as argument, passing its index as first argument. Each character is passed by address to `f` to the be modified if necessary.
+
+- Solve
+
+  - ```c
+    void	ft_striteri(char *s, void (*f)(unsigned int, char *))
+    {
+    	unsigned int	i;
+    
+    	i = 0;
+    	while (s[i])
+    	{
+    		f(i, &s[i]);
+    		i++;
+    	}
+    }
+    ```
+
 
 #### `putchar_fd()`
 
 - Prototype
 
   - ```c
-    asd
+    void	ft_putchar_fd(char *c, int fd);
     ```
 
 - Parameters
 
+  - `c`: 출력할 문자
+
+    > The character to output.
+
+  - `fd`: 값이 쓰여질 파일 식별자 (file descriptor)
+
+    > The file descriptor on which to write.
+
 - Return value
+
+  - > None
 
 - External functions
 
+  - `write`
+
 - Description
+
+  - 제공받은 파일 식별자에 문자 `c`를 출력한다.
+
+    > Outputs the character `c` to the given file descriptor.
 
 - Solve
 
   - ```c
+    #include <unistd.h>
     
+    void	ft_putchar_fd(char c, int fd)
+    {
+    	if (fd < 0)
+    		return ;
+    	write(fd, &c, 1);
+    }
     ```
+
+- Questions
+
+  1. `write` 함수는 무엇인가?
+
+     - ```c
+       #include <unistd.h>
+       ssize_t	write(int fd, const void *buf, size_t count);
+       ```
+
+     - `write()`는  `buf`에서 시작하는 버퍼에서 file descriptor `fd`가 참조하는 파일에 `count` 바이트까지 쓰는 함수
+
+  2. `fd` 파일 디스크립터?
+
+     - 리눅스와 유닉스에서는 시스템을 전부 파일로 처리하여 관리한다. 시스템에서 프로세스가 파일에 접근하기 위한 방법으로 파일 디스크립터(File Descriptor)라는 핸들이 필요하다.
+     - 해당 파일을 open할 때 (해당 파일에 접근할 때) 파일 디스크립터는 0부터 N까지 즉, 음수가 아닌 0부터 차례대로 숫자를 부여받는다.
+     - 0, 1, 2는 프로세스가 메모리에서 실행을 시작할 때 기본적으로 할당되는 파일 디스크립터이다.
+       - 0: 표준 입력(stdin)
+       - 1: 표준 출력(stdout)
+       - 2: 표준 오류(stderr)
+     - 그러므로 우리가 생성하는 파일 디스크립터들은 3번부터 차례대로 할당받게 된다. 쉽게 생각하면, 파일 디스크립터는 파일을 다루기 위해서 해당파일의 주소를 참조하여 접근하는 형태라고 생각하면 된다.
+     - https://wonillism.tistory.com/166
+
+  3. `ssize_t`는 무엇인가?
+
+     - signed size_t
+     - 가장 큰 사이즈를 담을 수 있는 signed 데이터 타입 (음수를 포함하기 위해 사용)
+       - 32bit 머신 -> signed int
+       - 64bit 머신 -> signed long long
 
 #### `putstr_fd()`
 
 - Prototype
 
   - ```c
-    asd
+    void	ft_putstr_fd(char *s, int fd);
     ```
 
 - Parameters
 
+  - `s`: 출력할 문자열
+
+    > The string to output.
+
+  - `fd`: 값이 쓰여질 파일 식별자
+
+    > The file descriptor on which to write.
+
 - Return value
+
+  > None
 
 - External functions
 
+  - `write`
+
 - Description
+
+  - 제공받은 파일 식별자에 문자열 `s`를 출력한다.
+
+    > Outputs the string `s` to the given file descriptor.
 
 - Solve
 
   - ```c
+    #include <unistd.h>
+    #include "libft.h"
     
+    void	ft_putstr_fd(char *s, int fd)
+    {
+    	if (s == NULL || fd < 0)
+    		return ;
+    	write(fd, s, ft_strlen(s));
+    }
     ```
 
 #### `putendl_fd()`
@@ -1615,21 +1862,46 @@
 - Prototype
 
   - ```c
-    asd
+    void	ft_putendl_fd(char *s, int fd);
     ```
 
 - Parameters
 
+  - `s`: 출력할 문자열
+
+    > The string to output.
+
+  - `fd`: 값이 쓰여질 파일 식별자
+
+    > The file descriptor on which to write.
+
 - Return value
+
+  > None
 
 - External functions
 
+  - `write`
+
 - Description
+
+  - 제공받은 파일 식별자에 문자열 `s`를 출력하고, 개행을 출력한다.
+
+    > Outputs the string `s` to the given file descriptor followed by a newline.
 
 - Solve
 
   - ```c
+    #include <unistd.h>
+    #include "libft.h"
     
+    void	ft_putendl_fd(char *s, int fd)
+    {
+    	if (s == NULL || fd < 0)
+    		return ;
+    	write(fd, s, ft_strlen(s));
+    	write(fd, "\n", 1);
+    }
     ```
 
 #### `putnbr_fd()`
@@ -1637,24 +1909,63 @@
 - Prototype
 
   - ```c
-    asd
+    void	putnbr_fd(int n, int fd);
     ```
 
 - Parameters
 
+  - `n`: 출력할 정수
+
+    > The string to output.
+
+  - `fd`: 값이 쓰여질 파일 식별자
+
+    > The file descriptor on which to write.
+
 - Return value
+
+  > None
 
 - External functions
 
+  - `write`
+
 - Description
+
+  - 제공받은 파일 식별자에 정수 `n`을 출력한다.
+
+    > Outputs the integer `n` to the given file descriptor.
 
 - Solve
 
   - ```c
+    #include <unistd.h>
     
+    void	recursion_write(int n, int fd)
+    {
+    	if (n > 0)
+    	{
+    		recursion_write(n / 10, fd);
+    		write(fd, &"0123456789"[n % 10], 1);
+    	}
+    	else if (n < 0)
+    	{
+    		write(fd, "-", 1);
+    		recursion_write(-(n / 10), fd);
+    		write(fd, &"0123456789"[-(n % 10)], 1);
+    	}
+    }
+    
+    void	ft_putnbr_fd(int n, int fd)
+    {
+    	if (fd < 0)
+    		return ;
+    	if (n == 0)
+    		write(fd, "0", 1);
+    	else
+    		recursion_write(n, fd);
+    }
     ```
-
-
 
 
 
