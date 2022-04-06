@@ -54,38 +54,40 @@
     - 사용하는 모든 오브젝트 코드를 실행 파일에 내장하기 때문에 메모리에 로드되는 애플리케이션 코드 크기가 커진다.
     - 라이브러리 변경이 필요할 시, 변경된 라이브러리만 재배포하면 안되고, 프로그램을 다시 재배포 해야한다.
 
-  - 확장자: *.a / *.lib
+  - 확장자: `*.a` / `*.lib`
 
   - 정적 라이브러리 만들기
 
-    - 각각의 *.c 파일을 *.o 파일(오브젝트 파일)로 만든다 -> 오브젝트 파일들을 하나의 *.a 파일(아카이브 파일)로 만든다 -> 사용할 때는 빌드할 때 -L, -l 플래그로 라이브러리를 포함한다.
+    - `*.c` 파일들을 각각 `*.o` 파일(오브젝트 파일)로 만든다 -> 오브젝트 파일들을 하나의 `*.a` 파일(아카이브 파일)로 만든다 -> 사용할 때는 빌드할 때 -L, -l 플래그로 라이브러리를 포함한다.
     
     - ```shell
       # 라이브러리 만들기
       gcc -c my.c
       ar rcs libmy.a my.o
       
-      # 실행파일(test) 빌드할 떄 라이브러리(libmy.a) 포함하기
+      # 실행파일(test) 빌드할 떄 라이브러리(libmy.a) 포함하기 (lib[이름].a)
       gcc -o test test.c -L./ -lmy		# -L경로 -l이름
-      # 그냥 이렇게 해도 됨
+      # 그냥 이렇게 해도 됨 ㅎㅎ
       gcc -o test test.c libmy.a
       ```
       
-    - gcc: c 언어 컴파일러 (GNU C Compiler / GNU Compiler Collection)
+    - `gcc`: c 언어 컴파일러 (GNU C Compiler / GNU Compiler Collection)
     
-      - -c: 소스파일을 컴파일or어셈블하되, 링크는 하지 마라. (출력물은 각 소스파일들의 오브젝트 파일)
-    
-    - ar: 아카이브 생성, 수정 및 추출 (라이브러리 조작 명령어)
-    
-      - Archive: 기록보관소. 파일들을 한 곳에 모아둔 것 (라이브러리)
       - options
-        - r
+        - `c`: 소스파일을 컴파일or어셈블하도록 컴파일러에 지시하지만, 링크는 하지 않는다. (출력물은 각 소스파일들의 오브젝트 파일 `*.o`)
+        - `o`: 아웃풋 파일이름
+    
+    - `ar`: 아카이브 생성, 수정 및 추출 (라이브러리 조작 명령어)
+    
+      - Archive: 기록보관소. 파일들을 한 곳에 모아둔 것 (라이브러리라고 생각하면 편할 듯)
+      - options
+        - `r`
           - 파일 멤버를 아카이브에 삽입 (교체 포함)
           - 새로운 오브젝트 파일이면 추가, 기존 파일이면 교체
-        - c
+        - `c`
           - 아카이브(라이브러리) 생성
           - 존재하지 않는 아카이브를 작성or갱신하는 경우에 경고하지 않는다.
-        - s
+        - `s`
           - 아카이브 인덱스를 생성
           - 아카이브 인덱스를 생성하지 않으면 링크 속도가 느려지고, 시스템 환경에 따라서는 에러가 발생.
     
@@ -2606,6 +2608,18 @@ $(NAME) : $(OBJS)
 - `make bonus`는 `libft.a` 라이브러리에 보너스 함수들을 추가한다.
 
 ```makefile
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/04/01 17:37:39 by youngcho          #+#    #+#              #
+#    Updated: 2022/04/06 13:48:22 by youngcho         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = libft.a
 
 SRCS = ft_atoi.c \
@@ -2644,7 +2658,15 @@ SRCS = ft_atoi.c \
 	   ft_toupper.c
 OBJS = $(SRCS:.c=.o)
 
-BON_SRCS = ft_lstnew.c ...
+BON_SRCS = ft_lstnew.c \
+		   ft_lstadd_front.c \
+		   ft_lstsize.c \
+		   ft_lstlast.c \
+		   ft_lstadd_back.c \
+		   ft_lstdelone.c \
+		   ft_lstclear.c \
+		   ft_lstiter.c \
+		   ft_lstmap.c
 BON_OBJS = $(BON_SRCS:.c=.o)
 
 AR = ar
@@ -2655,7 +2677,7 @@ CFLAGS = -Wall -Wextra -Werror
 .PHONY : all clean fclean re bonus
 all : $(NAME)
 clean :
-	rm -f $(OBJS)
+	rm -f $(OBJS) $(BON_OBJS)
 fclean : clean
 	rm -f $(NAME)
 re : fclean all
@@ -3042,79 +3064,121 @@ typedef struct s_list
     }
     ```
 
-#### `()`
+#### `ft_lstiter()`
 
 - Prototype
 
   - ```c
-    
+    void	ft_lstiter(t_list *lst, void (*f)(void *));
     ```
 
 - Parameters
 
-  - 
+  - `lst`: 리스트상의 요소의 주소
 
-    > 
+    > The address of a pointer to a node.
 
-  - 
+  - `f`: 리스트 내에서 반복 적용될 함수 포인터
 
-    > 
+    > The address of the function used to iterate on the list.
 
 - Return value
 
-  > 
+  > None
 
 - External functions
 
-  - 
+  - None
 
 - Description
 
-  - 
+  - 리스트 `lst`를 순회하며, 리스트에 포함된 모든 요소들의 content에 함수 `f`를 반복적으로 적용시킨다.
 
-    > 
+    > Iterates the list `lst` and applies the function `f` on the content of each node.
 
 - Solve
 
   - ```c
+    #include "libft.h"
     
+    void	ft_lstiter(t_list *lst, void (*f)(void *))
+    {
+      // lst == NULL 은 예외처리할 필요가 없지만, 보기편하려고 넣었다. (lst == NULL 이면 자동으로 반복문을 지나가기 때문)
+    	if (lst == NULL || f == NULL)
+    		return ;
+    	while (lst)
+    	{
+    		f(lst->content);
+    		lst = lst->next;
+    	}
+    }
     ```
 
-#### `()`
+#### `ft_lstmap()`
 
 - Prototype
 
   - ```c
-    
+    t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
     ```
 
 - Parameters
 
-  - 
+  - `lst`: 리스트상의 요소
 
-    > 
+    > The address of a pointer to a node.
 
-  - 
+  - `f`: 리스트 내에서 반복 적용될 함수 포인터
 
-    > 
+    > The address of the function used to iterate on the list.
+
+  - `del`: 필요할 경우, 요소의 content를 삭제하는 데에 사용되는 함수
+
+    > the address of the function used to delete the content of a node if needed.
 
 - Return value
 
-  > 
+  > The new List.
+  > NULL if the allocation fails.
 
 - External functions
 
-  - 
+  - `malloc`, `free`
 
 - Description
 
-  - 
+  - 리스트 `lst`의 요소들을 순회하며 각 요소의 content에 함수 `f`를 적용한다. 또한 함수. `f`를 연속 적용시킨 결과물들을 content로 담은 새로운 리스트를 생성한다. `del` 함수들은 필요 시 각 요소의 content를 삭제하는 데 사용된다.
 
-    > 
+    > Iterates the list `lst` and applies the function `f` on the content of each node. Creates a new list resulting of the successive applications of the function `f`. The `del` function is used to delete the content of a node if needed.
 
 - Solve
 
   - ```c
+    #include "libft.h"
     
+    t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+    {
+    	t_list	*head;
+    	t_list	*node;
+    
+    	if (lst == NULL || f == NULL)
+    		return (NULL);
+    	head = ft_lstnew(f(lst->content));
+    	if (head == NULL)
+    		return (NULL);
+    	node = head;
+    	while (lst->next)
+    	{
+    		node->next = ft_lstnew(f(lst->next->content));
+    		if (node->next == NULL)
+    		{
+    			ft_lstclear(&head, del);
+    			return (NULL);
+    		}
+    		node = node->next;
+    		lst = lst->next;
+    	}
+    	return (head);
+    }
     ```
 
