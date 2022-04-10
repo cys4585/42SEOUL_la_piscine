@@ -86,6 +86,7 @@
           - 새로운 오브젝트 파일이면 추가, 기존 파일이면 교체
         - `c`
           - 아카이브(라이브러리) 생성
+          
           - 존재하지 않는 아카이브를 작성or갱신하는 경우에 경고하지 않는다.
         - `s`
           - 아카이브 인덱스를 생성
@@ -126,7 +127,7 @@ Makefile은 프로그램을 빌드하기 위해 `make`의 문법에 따라 작�
 
 먼저 프로그램을 빌드하기 위해 컴파일러가 하는 일을 알아봅시다.
 
-hello.c 소스파일을 -> hello.exe 실행파일로 빌드하기 위해 우리는 쉘에 `gcc hello.c` 명령을 치면 된다는 것을 알고있습니다. 하지만 실제 이 단순하 명령이 실행파일을 빌드하는데에는 총 네 가지 단계가 존재합니다.
+hello.c 소스파일을 -> hello.exe 실행파일로 빌드하기 위해 우리는 쉘에 `gcc hello.c` 명령을 치면 된다는 것을 알고있습니다. 하지만 실제 이 단순한 명령이 실행파일을 빌드하는데에는 총 네 가지 단계가 존재합니다.
 
 ```
 전처리 단계 -> 컴파일 단계 -> 어셈블 단계 -> 링크단계
@@ -749,7 +750,7 @@ $(NAME) : $(OBJS)
     	return (0);
     ```
 
-- Questions
+- Notes
 
   1. argument를 int 타입으로 받아야 하는 이유? 받아도 되는 이유?
 
@@ -908,7 +909,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. `size_t` 는 무엇인가?
      - 가장 큰 사이즈를 담을 수 있는 `unsigned 정수형`
@@ -922,7 +923,7 @@ $(NAME) : $(OBJS)
      - `unsigned int`는 운영체제에 따라 사이즈가 달라지기 때문에 고정된 `size_t`를 사용한다.
   2. 매개변수를 `const char *` 로 선언한 무엇인가?
      - char pointer 변수가 가리키는 곳의 값을 수정할 수 없도록 상수취급하기 위함
-     - `const char *s = "abc"`가 들어오면, s가 가리키는 곳의 값은 `"abc"`로 고정되고, 수정할 수 없다. 단, s의 값 자체를 바꿀 순 있다. (다른 곳을 가리키도록 할 수 있음)
+     - `const char *s = "abc"`가 들어오면, s가 가리키는 곳의 값은 `"abc"`로 고정되고, 수정할 수 없다. 단, s의 값을 바꿀 순 있다. (다른 곳을 가리키도록 할 수 있음)
 
 #### `memset()`
 
@@ -960,7 +961,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. pointer를 `void *` 타입으로 받고, `unsigned char *` 로 형변환하는 이유
 
@@ -975,7 +976,7 @@ $(NAME) : $(OBJS)
        - `unsigned` 로 형변환을 해주는 이유는 **C 언어 표준에서는 unsigned char만을 패딩이 없는 자료형으로 보증**하기 때문이다.
          - 패딩은 길이를 맞추기 위해 추가하는 쓸 데 없는 비트를 의미한다.
          - ex) `true, false` 를 표현하기 위해 1, 0 만을 값으로 갖는 자료형을 만든다고 하면 1, 0만 있으면 되기 때문에 1비트만 있으면 충분하다. 하지만, 메모리에 데이터를 쓰고 읽는 것은 최소 바이트 단위로 이루어지기 때문에, 1바이트(8비트)를 모두 써서 `00000000, 00000001` 라는 형태로 0과 1을 표현할 수 밖에 없다. 이 때 위처럼 깔끔하게 유효한 비트를 맨 오른쪽에 넣을 수도 있지만 "우리는 유효한 비트를 세 번째 자리에 넣읍시다" 라고 약속하고 `true, false` 를  `00000000, 00100000` 로 정의할 수도 있다. 이 때 저 무의미한 0들, 오직 자릿수 맞추기 용도인 저 0들을 패딩비트라고 부른다.
-         - C 언어 표준에서는 문자 단위로 조작할 때는 `char`, byte 단위로 조작할 때는 `unsigned char` 를 사용하라고 한다.
+         - **C 언어 표준에서는 문자 단위로 조작할 때는 `char`, byte 단위로 조작할 때는 `unsigned char` 를 사용하라고 한다.**
   2. memory 영역을 setting할 argument를 `int` 타입으로 받는 이유
 
      - `unsigned char` 타입으로 받으면 0 ~ 255 외의 값에 대해 알 수 없기 때문에 `int` 로 받는다.
@@ -1057,7 +1058,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. `restrict`
 
@@ -1151,10 +1152,10 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. **비파괴적인 방식으로 복사**한다는게 무엇인가?
-     - `dst`와 `src`의 메모리 영역이 overlap되면 복사하는 과정에서 값이 오염될 수 있다. 이를 방지하는 방식을 비파괴적인 방식이라고 한다.
+     - `dst`와 `src`의 메모리 영역이 overlap되면 복사하는 과정에서 값이 오염될 수 있다. 오염되는 것을 방지하는 방식을 비파괴적인 방식이라고 한다.
 
 #### `strlcpy()`
 
@@ -1215,7 +1216,7 @@ $(NAME) : $(OBJS)
 
 - DESCRIPTION
 
-  - 문자을 연결한다. `strncat()`보다 안전하고 일관성 있고 오류가 적은 대체품으로 설계되었다.
+  - 문자를 연결한다. `strncat()`보다 안전하고 일관성 있고 오류가 적은 대체품으로 설계되었다.
   - `dst` 버퍼의 전체 크기를 사용하고, 공간이 있는 경우 NUL-termination을 보장한다. NUL을 위한 공간은 `dstsize`에 포함되어야 한다.
   - `dst`의 끝에 `src` 문자열을 연결한다. 최대 `dstsize - strlen(dst) - 1` 글자를 추가한다. 그런 다음 `dstsize == 0` 이거나 `dst` 문자열이 `dstsize`보다 길지 않는 한 NUL 종료된다. (실제로 이것은 `dstsize`가 올바르지 않거나 `dst`가 적절한 문자열이 아님을 의미하므로 발생해서는 안된다.)
 
@@ -1226,41 +1227,36 @@ $(NAME) : $(OBJS)
 - Solve
 
   - ```c
+    #include "libft.h"
     #include <stddef.h>
     
     size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
     {
-    	size_t	init_len_of_dst;
+    	size_t	dst_len;
+    	size_t	src_len;
     	size_t	i;
     
-    	init_len_of_dst = 0;
-    	while (dst[init_len_of_dst])
-    		init_len_of_dst++;
-    	i = 0;
+    	dst_len = ft_strlen(dst);
+    	src_len = ft_strlen(src);
       // dstsize == 0 이거나 dst 문자열이 dstsize 보다 길면
-      if (dstsize == 0 || dstsize < init_len_of_dst)
+    	if (dstsize == 0 || dstsize < dst_len)
+    		return (dstsize + src_len);
+    	i = 0;
+    	while (dst_len + i + 1 < dstsize && src[i])
     	{
-    		while (src[i])
-    			i++;
-    		return (dstsize + i);
-    	}
-    	while (init_len_of_dst + i + 1 < dstsize && src[i])
-    	{
-    		dst[init_len_of_dst + i] = src[i];
+    		dst[dst_len + i] = src[i];
     		i++;
     	}
-    	dst[init_len_of_dst + i] = '\0';
-    	while (src[i])
-    		i++;
-    	return (init_len_of_dst + i);
+    	dst[dst_len + i] = '\0';
+    	return (dst_len + src_len);
     }
     ```
-
-- Questions
+  
+- Notes
 
   1. return value: **(`dst` 초기 길이 / `dstsize` 중 작은 값) + `src`의 길이**인 이유
-     - `dst`가 `dstsize`보다 큰 경우는 문자열을 이어붙일 수가 없다. 
-     - `dst` 문자열이 잘리는지를 감지를 간단하게 하기 위해 수행된다.
+     - `dst` 길이가 `dstsize`보다 큰 경우는 문자열을 이어붙일 수가 없다. 
+     - `dst` 문자열이 잘리는지 감지를 간단하게 하기 위해 수행된다.
 
 #### `toupper()`
 
@@ -1353,11 +1349,11 @@ $(NAME) : $(OBJS)
     	i = 0;
     	while (s[i])
     	{
-    		if (s[i] == c)
+    		if (s[i] == (char)c)
     			return ((char *)s + i);
     		i++;
     	}
-    	if (s[i] == c)
+    	if (s[i] == (char)c)
     		return ((char *)s + i);
     	return (NULL);
     }
@@ -1395,11 +1391,11 @@ $(NAME) : $(OBJS)
     	i = 0;
     	while (s[i])
     	{
-    		if (s[i] == c)
+    		if (s[i] == (char)c)
     			result = (char *)s + i;
     		i++;
     	}
-    	if (s[i] == c)
+    	if (s[i] == (char)c)
     		result = (char *)s + i;
     	return (result);
     }
@@ -1449,7 +1445,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. `(unsigned char)` 타입으로 캐스팅해서 비교하는 이유
 
@@ -1573,6 +1569,7 @@ $(NAME) : $(OBJS)
     #include "libft.h"
     // ft_strlen(), ft_strncmp()
     
+    // len : haystack 문자열의 len 길이만큼만 탐색한다.
     char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
     {
     	size_t	len_h;
@@ -1584,6 +1581,7 @@ $(NAME) : $(OBJS)
     	len_h = ft_strlen(haystack);
     	len_n = ft_strlen(needle);
     	i = 0;
+      
     	while ((i + len_n <= len) && (i + len_n <= len_h))
     	{
     		if (haystack[i] == needle[0]
@@ -1595,7 +1593,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. `haystack`과 `needle`은 무슨 뜻인가?
 
@@ -1621,6 +1619,8 @@ $(NAME) : $(OBJS)
 - DESCRIPTION
 
   - `str`이 가리키는 문자열의 초기 부분을 int 타입으로 변환한다.
+    - 다음과 같다.
+      - `(int)strtol(str, (char **)NULL, 10);`
 
 - RETURN VALUE
 
@@ -1630,6 +1630,8 @@ $(NAME) : $(OBJS)
 - Solve
 
   - ```c
+    #include <limits.h>
+    
     char	*pass_space(const char *str)
     {
     	int	i;
@@ -1653,19 +1655,38 @@ $(NAME) : $(OBJS)
     	return (1);
     }
     
-    int	convert_to_int(char *str)
+    int	convert_to_int(char *str, int sign)
     {
-    	int	num;
-    	int	i;
+      // (cutoff, cutlim)으로 overflow와 underflow를 감지한다.
+    	unsigned long	cutoff;
+    	unsigned long	cutlim;
+      // 실제 변환할 값을 저장할 변수
+    	unsigned long	num;
+      // overflow, underflow에 대한 flag
+    	int				over;
     
+    	// sign == 1 -> LONG_MAX == (cutoff + cutlim)
+      // sign == -1 -> LONG_MIN == -(cutoff + cutlim)
+    	cutoff = LONG_MAX / 10;
+    	cutlim = LONG_MAX % 10;
+    	if (sign == -1)
+    		cutlim = -(LONG_MIN % 10);
     	num = 0;
-    	i = 0;
-    	while ('0' <= str[i] && str[i] <= '9' && str[i])
+    	over = 0;
+    	while ('0' <= *str && *str <= '9' && *str)
     	{
-    		num = num * 10 + (str[i] - '0');
-    		i++;
+    		if (over == 1 || num > cutoff \
+    				|| (num == cutoff && (unsigned long)*str - '0' > cutlim))
+    			over = 1;
+    		else
+    			num = num * 10 + (*str - '0');
+    		str++;
     	}
-    	return (num);
+    	if (over && sign == 1)
+    		num = LONG_MAX;
+    	else if (over && sign == -1)
+    		num = LONG_MIN;
+    	return (sign * (int)num);
     }
     
     int	ft_atoi(const char *str)
@@ -1675,14 +1696,18 @@ $(NAME) : $(OBJS)
     
     	tmp_str = pass_space(str);
     	sign = check_sign(&tmp_str);
-    	return (sign * convert_to_int(tmp_str));
+    	return (convert_to_int(tmp_str, sign));
     }
     ```
 
-- Questions
-  1. 특정 값 이상부터는 `atoi`랑 결과가 다른데? 
+- Notes
+  1. `long strtol(const char *restrict str, char **restrict endptr, int base);`
      - 원본 `atoi`는 int 오버플로우는 그냥 무시되고 long 오버플로우부터 결과값이 바뀐다.
-     - 그러나 이 부분은 Undefined Behavior이기 때문에 똑같을 필요는 없다.
+     - 원형함수 `atoi`는 `(int)strtol(str, char **)NULL, 10)`을 리턴한다.
+     - `strtol();` 
+       - `strtol`함수는 `str`문자열에 있는 초기숫자를 base진수의 long 타입 정수로 변환해서 리턴을 해준다.
+       - overflow가 발생하면, `LONG_MAX` 값을 리턴한다.
+       - underflow가 발생하면, `LONG_MIN` 값을 리턴한다.
 
 #### `calloc()`
 
@@ -1715,7 +1740,10 @@ $(NAME) : $(OBJS)
     void	*ft_calloc(size_t count, size_t size)
     {
     	void	*memory;
-    
+    	
+      // overflow 상황에 대한 예외처리
+    	if (size != 0 && (count * size) / size != count)
+    		return (NULL);
     	memory = malloc(count * size);
     	if (memory == NULL)
     		return (NULL);
@@ -1844,7 +1872,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1.  `char const *s`의 의미?
      - `const char *s`는 `char const *s`와 같은 의미이다. 포인터 변수 `s`가 가리키는 곳의 값을 수정할 수 없다. 포인터 변수 `s`의 값은 수정할 수 있다. (다른 곳을 가리키게 할 수 있다.)
@@ -2093,11 +2121,11 @@ $(NAME) : $(OBJS)
       // 1. 필요한 공간의 크기를 구한다.
     	size = count_size(s, c);
       // 2. (필요한 공간 + 1)만큼 공간할당을 한다. (마지막 NULL 자리)
-    	dst_arr = (char **)malloc(sizeof(char **) * (size + 1));
+    	dst_arr = (char **)malloc(sizeof(char *) * (size + 1));
     	if (dst_arr == NULL)
     		return (NULL);
     	dst_arr[size] = NULL;
-      // 3. 문자열을 split 해서 공간할당을 한 배열에 각각 담는다.
+      // 3. 문자열을 split 해서 공간할당을 한 배열에 각각 담는다.0
     	if (split_str(dst_arr, s, c, ft_strlen(s)) == 0)
     	{
         // split한 문자열을 담을 공간할당에 실패하면 이 때까지 할당했던 공간을 모두 수거한다.
@@ -2186,6 +2214,8 @@ $(NAME) : $(OBJS)
     }
     
     // 한 자리씩 (정수 -> 문자)로 변환하는 재귀함수
+    // n이 0이 되면 더이상 재귀호출을 하지 않는다.
+    // 음수를 나머지 연산하면 -> 음수값이 나온다.
     void	recursion_convert(char *str, int idx, int n)
     {
     	if (n < 0)
@@ -2416,7 +2446,7 @@ $(NAME) : $(OBJS)
     }
     ```
 
-- Questions
+- Notes
 
   1. `write` 함수는 무엇인가?
 
@@ -2607,6 +2637,13 @@ $(NAME) : $(OBJS)
 
 - `make bonus`는 `libft.a` 라이브러리에 보너스 함수들을 추가한다.
 
+  - `make bonus` 의 리링크(relink)를 방지하기 위해 `ar` 커맨더의 `u` 플래그를 사용했다.
+
+    - 파일을 업데이트 한다. -r 옵션과 함께 사용하면 디스크 파일(오브젝트 파일)의 수정 시간이 아카이브의 파일보다 최신인 경우에만 아카이브의 파일이 교체된다.
+
+    > Update files.  When used with the -r option, files in the archive will be replaced only if the disk file has a newer modification time than the file in the archive.
+
+
 ```makefile
 # **************************************************************************** #
 #                                                                              #
@@ -2671,6 +2708,7 @@ BON_OBJS = $(BON_SRCS:.c=.o)
 
 AR = ar
 ARFLAGS = rcs
+BON_ARFLAGS = $(ARFLAGS)u
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
@@ -2682,7 +2720,7 @@ fclean : clean
 	rm -f $(NAME)
 re : fclean all
 bonus : all $(BON_OBJS)
-	$(AR) $(ARFLAGS) $(NAME) $(BON_OBJS)
+	$(AR) $(BON_ARFLAGS) $(NAME) $(BON_OBJS)
 
 $(NAME) : $(OBJS)
 	$(AR) $(ARFLAGS) $@ $?
@@ -2944,6 +2982,7 @@ typedef struct s_list
     
     	if (lst == NULL || new == NULL)
     		return ;
+      // *lst가 NULL이라면 -> 빈 리스트이다.
     	if (*lst == NULL)
     		*lst = new;
     	else
@@ -3155,6 +3194,19 @@ typedef struct s_list
 
   - ```c
     #include "libft.h"
+    #include <stdlib.h>
+    
+    void	clear_just_nodes(t_list *lst)
+    {
+    	t_list	*tmp;
+    
+    	while (lst)
+    	{
+    		tmp = lst->next;
+    		free(lst);
+    		lst = tmp;
+    	}
+    }
     
     t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
     {
@@ -3172,7 +3224,10 @@ typedef struct s_list
     		node->next = ft_lstnew(f(lst->next->content));
     		if (node->next == NULL)
     		{
-    			ft_lstclear(&head, del);
+    			if (del)
+    				ft_lstclear(&head, del);
+    			else
+    				clear_just_nodes(head);
     			return (NULL);
     		}
     		node = node->next;
@@ -3182,3 +3237,14 @@ typedef struct s_list
     }
     ```
 
+- Notes
+  1. `del`
+     - `del`함수가 `NULL`인 상태에서 node 생성에 실패했을 때, 이 때까지 생성했던 모든 node들을 `free`해줘야 하나?
+       - 해줘야 한다면
+         - 각각의 node들의 content로 인한 메모리 누수는?
+       - 안해줘야 한다면
+         - node들로 인한 메모리 누수는?
+       - 사용자가 함수를 호출할 때, `del`을 `NULL`로 준 이유를 알 수 없다.
+         1. content는 해제할 필요 없고, node들만 공간해제 해줘.
+         2. 아 content도 해제해야 맞긴한데 까먹었다.
+       - 어차피 내가 쓸 라이브러리니까, 1번으로 가정하고 해결하기로 했다.
