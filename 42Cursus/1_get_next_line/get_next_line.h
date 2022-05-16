@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:18:02 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/14 17:29:45 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/05/16 14:36:57 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,16 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *old_str, char const *buf);
-char	*split_nl(char *str, char **backup_str);
+char	*split_nl(char *str, char **backup_str_p);
+t_list	*lstlast(t_list *lst);
 
-char	*read_one_cycle(int fd, char **backup_str);
-void	lstadd_back(t_list **tail_p, int fd, char *str, char **backup_str);
-char	*get_backup_str_from_lst(t_list **lst, int fd);
-char	*get_str_from_lst(t_list **lst, int fd, t_list *node);
+void	lstdelone(t_list **lst, t_list *node);
+char	*read_one_cycle(int fd, char **backup_str_p);
+void	lstadd_back(t_list **tail_p, int fd, char *str, char **backup_str_p);
+char	*get_str_from_lst(t_list **lst, int fd, char flag, t_list *node);
 char	*get_next_line(int fd);
 
 #endif
