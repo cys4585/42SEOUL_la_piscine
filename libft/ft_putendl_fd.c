@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
+/*   By: youngcho <youngcho@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 18:41:47 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/18 17:26:05 by youngcho         ###   ########.fr       */
+/*   Created: 2022/03/28 16:42:54 by youngcho          #+#    #+#             */
+/*   Updated: 2022/03/28 16:52:08 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
-
-#include "./libft/libft.h"
 #include <unistd.h>
-#include <stdarg.h>
+#include "libft.h"
 
-int	handle_cs5(va_list ap, char fs);
-int	handle_di(va_list ap);
-int	handle_uxx(va_list ap, char fs);
-
-int	ft_printf(const char *format, ...);
-
-#endif
+void	ft_putendl_fd(char *s, int fd)
+{
+	if (s == NULL || fd < 0)
+		return ;
+	write(fd, s, ft_strlen(s));
+	write(fd, "\n", 1);
+}

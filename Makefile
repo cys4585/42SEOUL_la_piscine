@@ -6,44 +6,56 @@
 #    By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/16 18:35:35 by youngcho          #+#    #+#              #
-#    Updated: 2022/05/17 19:14:30 by youngcho         ###   ########.fr        #
+#    Updated: 2022/05/18 19:36:23 by youngcho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 
-LIBFT_DIR = ./libft
-LIBFT_NAME = $(LIBFT_DIR)/libft.a
+SRC_DIR = ./srcs/
+OBJ_DIR = ./objs/
 
-SRCS = ft_printf.c \
+SRCS_NAME = ft_printf.c \
 		handle_cs5.c \
-		handle_diu.c
-OBJS = $(SRCS:.c=.o)
+		handle_di.c \
+		handle_uxx.c
+		
+SRCS = $(addprefix $(SRC_DIR), $(SRCS_NAME))
+OBJS = $(addprefix $(OBJ_DIR), $(SRCS_NAME:%.c=%.o))
+INC = ./inc/
+
+LIBFT_DIR = ./libft/
+LIBFT_NAME = $(LIBFT_DIR)libft.a
 
 AR = ar
 ARFLAGS = rcsu
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-RM = rm -f
 
 .PHONY : all clean fclean re
 all : $(NAME)
 clean :
 	make clean -C $(LIBFT_DIR)
-	$(RM) $(OBJS)
+	rm -rf $(OBJ_DIR)
 fclean :
 	make fclean -C $(LIBFT_DIR)
-	$(RM) $(OBJS)
-	$(RM) $(NAME)
+	rm -rf $(OBJ_DIR)
+	rm -f $(NAME)
 re : fclean
 	make all
 	
-$(NAME) : $(OBJS) $(LIBFT_NAME)
-	$(AR) $(ARFLAGS) $@ $<
+$(NAME) : $(OBJ_DIR) $(OBJS)
+	make all -C $(LIBFT_DIR)
+	cp $(LIBFT_NAME) $(NAME)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
 
-%.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR) :	
+	mkdir $(OBJ_DIR)
 
-$(LIBFT_NAME) :
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@ -I $(INC)
+
+
+$(LIBFT_NAME) : $(LIBFT_OBJS)
 	make all -C $(LIBFT_DIR)
 	cp $(LIBFT_NAME) $(NAME)
