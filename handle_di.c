@@ -1,26 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*   handle_di.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 18:41:47 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/18 17:26:05 by youngcho         ###   ########.fr       */
+/*   Created: 2022/05/17 19:07:26 by youngcho          #+#    #+#             */
+/*   Updated: 2022/05/18 17:18:28 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#include "ft_printf.h"
 
-#include "./libft/libft.h"
-#include <unistd.h>
-#include <stdarg.h>
+int	get_nbr_len(int nbr)
+{
+	int	cnt;
 
-int	handle_cs5(va_list ap, char fs);
-int	handle_di(va_list ap);
-int	handle_uxx(va_list ap, char fs);
+	if (nbr == 0)
+		return (1);
+	cnt = 0;
+	if (nbr < 0)
+		cnt++;
+	while (nbr)
+	{
+		nbr /= 10;
+		cnt++;
+	}
+	return (cnt);
+}
 
-int	ft_printf(const char *format, ...);
+int	handle_di(va_list ap)
+{
+	int	nbr;
 
-#endif
+	nbr = va_arg(ap, int);
+	ft_putnbr_fd(nbr, STDOUT_FILENO);
+	return (get_nbr_len(nbr));
+}
