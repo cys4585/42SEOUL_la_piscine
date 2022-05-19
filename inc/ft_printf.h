@@ -6,14 +6,14 @@
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:41:47 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/18 19:23:44 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/05/19 14:40:10 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-#include "../libft/libft.h"
+#include "../libft/inc/libft.h"
 #include <unistd.h>
 #include <stdarg.h>
 
