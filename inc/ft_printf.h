@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:41:47 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/19 14:40:10 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/05/19 16:25:27 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 int	handle_cs5(va_list ap, char fs);
 int	handle_di(va_list ap);
 int	handle_uxx(va_list ap, char fs);
+int	handle_p(va_list ap);
 
 int	ft_printf(const char *format, ...);
 

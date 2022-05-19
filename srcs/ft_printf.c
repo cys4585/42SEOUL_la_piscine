@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:35:38 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/18 19:34:17 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/05/19 16:25:12 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 
 int	handle_format_specifier(va_list ap, char fs)
 {
-	void	*p;
-
 	if (ft_strchr("cs%", fs))
 		return (handle_cs5(ap, fs));
-	if (ft_strchr("di", fs))
-		return (handle_di(ap));
 	if (ft_strchr("uxX", fs))
 		return (handle_uxx(ap, fs));
-	else if (fs == 'p')
-		p = va_arg(ap, void *);
+	if (ft_strchr("di", fs))
+		return (handle_di(ap));
+	if (fs == 'p')
+		return (handle_p(ap));
 	return (0);
 }
 

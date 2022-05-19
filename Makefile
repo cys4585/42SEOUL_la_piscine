@@ -6,7 +6,7 @@
 #    By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/16 18:35:35 by youngcho          #+#    #+#              #
-#    Updated: 2022/05/19 15:29:12 by youngcho         ###   ########.fr        #
+#    Updated: 2022/05/19 16:26:18 by youngcho         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ OBJ_DIR = objs/
 SRCS_NAME = ft_printf.c \
 		handle_cs5.c \
 		handle_di.c \
-		handle_uxx.c
+		handle_uxx.c \
+		handle_p.c
 SRCS = $(addprefix $(SRC_DIR), $(SRCS_NAME))
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS_NAME:%.c=%.o))
 INC = inc/
