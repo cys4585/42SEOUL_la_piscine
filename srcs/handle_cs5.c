@@ -6,7 +6,7 @@
 /*   By: youngcho <youngcho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 19:13:48 by youngcho          #+#    #+#             */
-/*   Updated: 2022/05/18 19:26:44 by youngcho         ###   ########.fr       */
+/*   Updated: 2022/05/19 16:29:38 by youngcho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	handle_cs5(va_list ap, char fs)
 	else
 	{
 		str = va_arg(ap, char *);
+		if (str == NULL)
+			str = "(null)";
 		ft_putstr_fd(str, STDOUT_FILENO);
 		len = ft_strlen(str);
 	}
